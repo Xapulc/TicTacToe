@@ -1,26 +1,26 @@
-import TicTacToe as ttt
-import ElemCourse as el
-import random as rnd
+from TicTacToe import TicTacToe
+from ElemCourse import ElemCourse
+from random import randint
 
 
-def generateElem(game):
-    new = el.ElemCourse(rnd.randint(0, 2), rnd.randint(0, 2))
+def generate_elem(game):
+    new = ElemCourse(randint(0, 2), randint(0, 2))
     while new in game:
-        new = el.ElemCourse(rnd.randint(0, 2), rnd.randint(0, 2))
+        new = ElemCourse(randint(0, 2), randint(0, 2))
 
     if not game:
-        new.value = 0
+        new.value = 0 # first move "o"
     else:
         new.value = 1 - game[len(game) - 1].value
 
     return new
 
 
-def createRandomGame():
-    game = ttt.TicTacToe()
+def create_random_game():
+    game = TicTacToe()
     end = False
     while not end:
-        end = game.move(generateElem(game))
+        end = game.move(generate_elem(game))
 
-    print(game)
+    # print(game)
     return game, game.winner()
