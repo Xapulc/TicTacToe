@@ -15,8 +15,8 @@ class ElemCourse:
         self.x = x
         self.y = y
 
-    def pointsEqual(self, elem):
-        return (self.x == elem.x) and (self.y == elem.y)
+    def __eq__(self, other):
+        return (self.x == other.x) and (self.y == other.y)
 
     def onGenDiag(self):
         return self.x == self.y

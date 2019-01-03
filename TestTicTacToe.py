@@ -1,4 +1,10 @@
 import GenerateDataForGame as genData
 
-course, res = genData.createRandomGame()
-print(f'result is {res}')
+count = 10
+dic = {}
+
+for _ in range(count):
+    game, res = genData.createRandomGame()
+    # dic[tuple(game)] = res
+
+# print(dic)
