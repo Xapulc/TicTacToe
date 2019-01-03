@@ -19,12 +19,15 @@ class TicTacToe(list):
         return len([True for elem in self
                     if (elem.x + elem.y == 2) and (elem.value == value)]) == 3
 
-    def check_end(self, move):
+    def check_end_with_move(self, move):
         return self.check_line(move.x, move.value) or \
                self.check_column(move.y, move.value) or \
                (move.on_gen_diag()) and (self.check_gen_diag(move.value)) or \
                (move.on_snd_diag()) and (self.check_snd_diag(move.value)) or \
                len(self) == 9
+
+    def check_end(self):
+        return (self.winner() != -1) or (len(self) == 9)
 
     def move(self, move):
         def check_new_point(new):
@@ -33,7 +36,7 @@ class TicTacToe(list):
 
         check_new_point(move)
         self.append(move)
-        return self.check_end(move)
+        return self.check_end_with_move(move)
 
     def winner(self):
         for val in range(2):
@@ -48,7 +51,7 @@ class TicTacToe(list):
             if self.check_snd_diag(val):
                 return val
         else:
-            return -1  # nobody doesn't win
+            return -1  # nobody win
 
     def __str__(self):
         field = np.array([np.array([' ', ' ', ' ']) for _ in range(3)])

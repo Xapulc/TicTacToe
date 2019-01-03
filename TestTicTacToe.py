@@ -1,7 +1,7 @@
 import GenerateDataForGame as gen_data
 import FileWorker as fw
 
-count = 100000
+count = 200000
 dic = {}
 
 for _ in range(count):

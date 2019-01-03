@@ -1,4 +1,4 @@
-class ElemCourse:
+class ElemCourse(object):
     def __init__(self, x, y, value=None):
         if value is not None:
             if value == 'x':
