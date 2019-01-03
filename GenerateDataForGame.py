@@ -3,7 +3,7 @@ import ElemCourse as el
 import random as rnd
 
 
-def generateElem(game):
+def generate_elem(game):
     new = el.ElemCourse(rnd.randint(0, 2), rnd.randint(0, 2))
     while new in game:
         new = el.ElemCourse(rnd.randint(0, 2), rnd.randint(0, 2))
@@ -16,11 +16,11 @@ def generateElem(game):
     return new
 
 
-def createRandomGame():
+def create_random_game():
     game = ttt.TicTacToe()
     end = False
     while not end:
-        end = game.move(generateElem(game))
+        end = game.move(generate_elem(game))
 
     print(game)
     return game, game.winner()

@@ -4,7 +4,7 @@ count = 10
 dic = {}
 
 for _ in range(count):
-    game, res = genData.createRandomGame()
-    # dic[tuple(game)] = res
+    game, res = genData.create_random_game()
+    dic[tuple(game)] = res
 
-# print(dic)
+print(dic)
