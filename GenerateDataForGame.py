@@ -22,5 +22,5 @@ def create_random_game():
     while not end:
         end = game.move(generate_elem(game))
 
-    print(game)
+    # print(game)
     return game, game.winner()
