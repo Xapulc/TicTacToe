@@ -55,7 +55,9 @@ class PlayerGame(object):
                 move = ElemCourse(int(x), int(y))
                 self.game.add(move)
             except ValueError:
-                print("Too many values or values aren't digital")
+                print("Too many or too little values or values aren't digital")
+            except AssertionError:
+                print("Values must be between 0 and 2")
             else:
                 break
 
