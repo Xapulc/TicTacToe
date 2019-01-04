@@ -3,11 +3,15 @@ from FileWorker import load_dict_from_file
 from ElemCourse import ElemCourse
 from GenerateDataForGame import generate_elem
 
+
 class PlayerGame(object):
 
     def __init__(self):
         self.game = TicTacToe()
         self.data = load_dict_from_file()
+        self.win = 1
+        self.draw = 0
+        self.lose = -1
 
     def start(self):
         print("Welcome to TicTacToe, v. 2.7218281828459045")
@@ -30,18 +34,23 @@ class PlayerGame(object):
                 break
 
     def player_move(self):
-        x, y = input("Your move(i.e. 1, 0): ").split(", ")
-        move = ElemCourse(int(x), int(y), "o")
+        while True:
+            try:
+                x, y = input("Your move(i.e. 1, 0): ").split(", ")
+                move = ElemCourse(int(x), int(y), "o")
+            except Exception:
+                print("Wrong input")
+                continue
+
+            break
+
         self.game.append(move)
         print(self.game)
 
     def comp_move(self):
         keys = set(self.data.keys())
-        # print(keys)
         for key in keys:
-            # print(type(key), print(key), self.game)
             if key[:len(self.game)] != tuple(self.game):
-                # print("Delete:", key)
                 self.data.pop(key)
         if self.data:
             self.game.append(self.__do_professional_move())
@@ -51,18 +60,21 @@ class PlayerGame(object):
         print(self.game)
 
     def __do_professional_move(self):
-        # print("Preparing...")
         count_matrix = [[[0, 0] for _ in range(3)] for _ in range(3)]
         for game, res in self.data.items():
             move = game[len(self.game)]
-            count_matrix[move.x][move.y][0] += 0.5 if res == -1 else res
+            if res == 1:  # win "x"
+                count_matrix[move.x][move.y][0] += self.win
+            elif res == 0:  # win "o"
+                count_matrix[move.x][move.y][0] += self.lose
+            else:
+                count_matrix[move.x][move.y][0] += self.draw
             count_matrix[move.x][move.y][1] += 1
 
-        chance_matrix = [[0 if count_matrix[i][j][1] == 0 else count_matrix[i][j][0]/count_matrix[i][j][1]
+        chance_matrix = [[self.lose-1 if count_matrix[i][j][1] == 0 else count_matrix[i][j][0] / count_matrix[i][j][1]
                           for j in range(3)] for i in range(3)]
-        # print(chance_matrix)
 
-        max = -1
+        max = self.lose-1
         i_max = -1
         j_max = -1
         for i in range(3):
