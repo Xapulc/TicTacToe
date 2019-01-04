@@ -1,4 +1,8 @@
 class ElemCourse(object):
+    """
+    A player’s move representation that contains the coordinate and sign (X or O)
+    """
+
     def __init__(self, x, y, value=None):
         if value is not None:
             if value == 'x':

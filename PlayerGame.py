@@ -5,8 +5,16 @@ from GenerateDataForGame import generate_elem
 
 
 class PlayerGame(object):
+    """
+    A game with player,
+    call start() to start game
+    """
 
     def __init__(self):
+        """
+        1 An instance of the class is created for the game;
+        2 Loading data for computer about previous games.
+        """
         self.game = TicTacToe()
         self.data = load_dict_from_file()
         self.win = 1
@@ -14,6 +22,9 @@ class PlayerGame(object):
         self.lose = -1
 
     def start(self):
+        """
+        Start a game with computer
+        """
         print("Welcome to TicTacToe, v. 2.7218281828459045")
         input("Press Enter to start c:")
 
@@ -34,20 +45,26 @@ class PlayerGame(object):
                 break
 
     def player_move(self):
+        """
+        A player move,
+        get user input (coordinate) like "1, 0" and set in this field O (zero)
+        """
         while True:
             try:
                 x, y = input("Your move(i.e. 1, 0): ").split(", ")
                 move = ElemCourse(int(x), int(y), "o")
-            except Exception:
-                print("Wrong input")
-                continue
-
-            break
+            except ValueError:
+                print("Too many values or values aren't digital")
+            else:
+                break
 
         self.game.append(move)
         print(self.game)
 
     def comp_move(self):
+        """
+        A computer move
+        """
         keys = set(self.data.keys())
         for key in keys:
             if key[:len(self.game)] != tuple(self.game):
@@ -60,6 +77,10 @@ class PlayerGame(object):
         print(self.game)
 
     def __do_professional_move(self):
+        """
+        The computer calculates the most successful move and return ElemCourse class instance
+        :return: ElemCourse class instance
+        """
         count_matrix = [[[0, 0] for _ in range(3)] for _ in range(3)]
         for game, res in self.data.items():
             move = game[len(self.game)]
