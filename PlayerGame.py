@@ -64,15 +64,16 @@ class PlayerGame(object):
         for game, res in self.data.items():
             move = game[len(self.game)]
             if res == 1:  # win "x"
-                count_matrix[move.x][move.y][0] += self.win
+                count_matrix[move.x][move.y][0] += self.win/(len(game)-len(self.game))**3
             elif res == 0:  # win "o"
-                count_matrix[move.x][move.y][0] += self.lose
+                count_matrix[move.x][move.y][0] += self.lose/(len(game)-len(self.game))**3
             else:
-                count_matrix[move.x][move.y][0] += self.draw
+                count_matrix[move.x][move.y][0] += self.draw/(len(game)-len(self.game))**3
             count_matrix[move.x][move.y][1] += 1
 
         chance_matrix = [[self.lose-1 if count_matrix[i][j][1] == 0 else count_matrix[i][j][0] / count_matrix[i][j][1]
                           for j in range(3)] for i in range(3)]
+        print(chance_matrix)
 
         max = self.lose-1
         i_max = -1
