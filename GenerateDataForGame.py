@@ -13,11 +13,6 @@ def generate_elem(game):
     while new in game:
         new = ElemCourse(randint(0, 2), randint(0, 2))
 
-    if not game:
-        new.value = 0  # first move "o"
-    else:
-        new.value = 1 - game[len(game) - 1].value
-
     return new
 
 
