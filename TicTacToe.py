@@ -4,22 +4,45 @@ import numpy as np
 class TicTacToe(list):
 
     def check_line(self, index, value):
+        """
+        :param index: line check index
+        :param value: 0 (for O) or 1 (for X)
+        :return: return true if line contains three O or X
+        """
         return len([True for i, elem in enumerate(self)
                     if (elem.x == index) and ((i + 1) % 2 == value)]) == 3
 
     def check_column(self, index, value):
+        """
+        :param index: column check index
+        :param value: 0 (for O) or 1 (for X)
+        :return: return true if column contains three O or X
+        """
         return len([True for i, elem in enumerate(self)
                     if (elem.y == index) and ((i + 1) % 2 == value)]) == 3
 
     def check_gen_diag(self, value):
+        """
+        :param value: 0 (for O) or 1 (for X)
+        :return: return true if general diagonal contains three O or X
+        """
         return len([True for i, elem in enumerate(self)
                     if (elem.x == elem.y) and ((i + 1) % 2 == value)]) == 3
 
     def check_snd_diag(self, value):
+        """
+        :param value: 0 (for O) or 1 (for X)
+        :return: return true if secondary diagonal contains three O or X
+        """
         return len([True for i, elem in enumerate(self)
                     if (elem.x + elem.y == 2) and ((i + 1) % 2 == value)]) == 3
 
     def check_end_with_move(self, move, value):
+        """
+        Checks whether the game is over after last move
+        :param move: last move in the game
+        :return: true uf game is end
+        """
         return self.check_line(move.x, value) or \
                self.check_column(move.y, value) or \
                (move.on_gen_diag()) and (self.check_gen_diag(value)) or \
@@ -27,9 +50,17 @@ class TicTacToe(list):
                len(self) == 9
 
     def check_end(self):
+        """
+        Checks whether the game is over
+        :return: true if game is end
+        """
         return (self.winner() != -1) or (len(self) == 9)
 
     def move(self, move):
+        """
+        :param move: ElemCourse class instance, next move in game
+        :return: true if game is over after this move
+        """
         def check_new_point(new):
             for elem in self:
                 assert (not elem == new)
@@ -39,6 +70,10 @@ class TicTacToe(list):
         return self.check_end_with_move(move, len(self) % 2)
 
     def winner(self):
+        """
+        Checks whether there is a winner in the game at the moment
+        :return: return 0 -> O - winner; 1 -> X - winner; -1 -> nobody win (dead heat or game isn't over)
+        """
         for val in range(2):
             for i in range(3):
                 if self.check_line(i, val):
@@ -51,7 +86,7 @@ class TicTacToe(list):
             if self.check_snd_diag(val):
                 return val
         else:
-            return -1  # nobody win
+            return -1
 
     def add(self, move):
         assert not move in self
