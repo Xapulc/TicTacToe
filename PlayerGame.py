@@ -34,9 +34,8 @@ class PlayerGame(object):
                     assert who_first in ('0', '1')
                 except AssertionError:
                     print("Please, write 0 or 1")
-                    continue
-
-                break
+                else:
+                    break
 
             self.comp_turn = int(who_first)
             while True:
