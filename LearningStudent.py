@@ -10,7 +10,7 @@ def create_learning_student_game(teacher_dic, student_dic, beginning_game=None):
     """
     game = LearningGame(teacher_dic.copy(), student_dic.copy(), beginning_game) if not beginning_game \
         else LearningGame(teacher_dic.copy(), student_dic.copy())
-    course_game, is_student_win = game.start(0)
+    course_game, is_student_win = game.start(0.15)
     # print(game)
     return course_game, course_game.winner(), is_student_win
 
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     count = 10
     student_wins = 0
     teacher_wins = 0
-    student_dic = load_dict_from_file("games2.txt")
+    student_dic = {}
     teacher_dic = load_dict_from_file("games.txt")
     for i in range(3):
         for j in range(3):

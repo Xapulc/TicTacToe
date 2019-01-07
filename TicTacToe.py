@@ -85,6 +85,17 @@ class TicTacToe(list):
         assert move not in self
         self.append(move)
 
+    def find_win_move(self):
+        if len(self) == 9:
+            return None
+
+        for elem in self.negative():
+            continue_game = TicTacToe(self.copy())
+            continue_game.move(elem)
+            if continue_game.winner() != -1:
+                return elem
+        return None
+
     def negative(self):
         res = []
         for i in range(3):

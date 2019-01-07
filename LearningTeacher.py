@@ -1,6 +1,5 @@
 import FileWorker as fw
 from LearningGame import LearningGame
-from TicTacToe import TicTacToe
 
 
 def create_learning_teacher_game():
@@ -12,12 +11,12 @@ def create_learning_teacher_game():
 
 
 if __name__ == "__main__":
-    count = 15000
+    count = 500000
     dic = {}
     for i in range(count):
         game, res = create_learning_teacher_game()
         dic[tuple(game)] = res
-        if i+1 % (count // 100) == 0:
+        if (i+1) % (count // 100) == 0:
             print(f"complete on {100 * ((i+1)/count):.0f}%")
     print(len(dic.keys()))
     fw.save_dict_to_file(dic, "games.txt")
