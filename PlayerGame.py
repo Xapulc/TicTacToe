@@ -1,7 +1,7 @@
 from TicTacToe import TicTacToe
 from FileWorker import load_dict_from_file
 from ElemCourse import ElemCourse
-from GenerateDataForGame import generate_elem
+from GenerateDataForGame import generate_random_elem
 
 
 class PlayerGame(object):
@@ -16,7 +16,7 @@ class PlayerGame(object):
         2 Loading data for computer about previous games.
         """
         self.game = TicTacToe()
-        self.data = load_dict_from_file()
+        self.data = load_dict_from_file("games2.txt")
         self.win = 1
         self.draw = 0
         self.lose = -1
@@ -58,7 +58,7 @@ class PlayerGame(object):
             if agreement == '1':
                 print("Preparing...")
                 self.game = TicTacToe()
-                self.data = load_dict_from_file()
+                self.data = load_dict_from_file("games2.txt")
                 continue
             else:
                 break
@@ -86,20 +86,16 @@ class PlayerGame(object):
         """
         A computer move
         """
-        if len(self.game) > 0:
-            keys = set(self.data.keys())
-            for key in keys:
-                if key[:len(self.game)] != tuple(self.game):
-                    self.data.pop(key)
+        self.game.filter(self.data)
 
         if self.data:
-            self.game.add(self.__do_professional_move())
+            self.game.add(self.learning_move())
         else:
-            self.game.add(generate_elem(self.game))
+            self.game.add(generate_random_elem(self.game))
 
         print(self.game)
 
-    def __do_professional_move(self):
+    def learning_move(self):
         """
         The computer calculates the most successful move and return ElemCourse class instance
         :return: ElemCourse class instance

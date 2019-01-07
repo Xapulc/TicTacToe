@@ -1,29 +1,11 @@
-from TicTacToe import TicTacToe
-from ElemCourse import ElemCourse
-from random import randint
+import random as rnd
 
 
-def generate_elem(game):
+def generate_random_elem(game):
     """
     Generate suitable ElemCourse class instanse
     :param game: current game
     :return: ElemCourse class instance - empty field and current sign (O or X)
     """
-    new = ElemCourse(randint(0, 2), randint(0, 2))
-    while new in game:
-        new = ElemCourse(randint(0, 2), randint(0, 2))
 
-    return new
-
-
-def create_random_game():
-    """
-    :return: moves in the game and result (who winner)
-    """
-    game = TicTacToe()
-    end = False
-    while not end:
-        end = game.move(generate_elem(game))
-
-    # print(game)
-    return game, game.winner()
+    return rnd.choice(game.negative())
