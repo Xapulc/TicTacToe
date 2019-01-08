@@ -2,7 +2,7 @@ from TicTacToe.ElemCourse import ElemCourse
 
 
 class TicTacToe(list):
-    def check_line(self, index, value):
+    def __check_line(self, index, value):
         """
         :param index: line check index
         :param value: the value on last move: 0 (for O) or 1 (for X)
@@ -11,7 +11,7 @@ class TicTacToe(list):
         return len([True for i, elem in enumerate(self)
                     if (elem.x == index) and ((i + 1) % 2 == value)]) == 3
 
-    def check_column(self, index, value):
+    def __check_column(self, index, value):
         """
         :param index: column check index
         :param value: the value on last move: 0 (for O) or 1 (for X)
@@ -20,7 +20,7 @@ class TicTacToe(list):
         return len([True for i, elem in enumerate(self)
                     if (elem.y == index) and ((i + 1) % 2 == value)]) == 3
 
-    def check_gen_diag(self, value):
+    def __check_gen_diag(self, value):
         """
         :param value: 0 (for O) or 1 (for X)
         :return: the value on last move: 0 (for O) or 1 (for X)
@@ -28,7 +28,7 @@ class TicTacToe(list):
         return len([True for i, elem in enumerate(self)
                     if (elem.x == elem.y) and ((i + 1) % 2 == value)]) == 3
 
-    def check_snd_diag(self, value):
+    def __check_snd_diag(self, value):
         """
         :param value: the value on last move: 0 (for O) or 1 (for X)
         :return: return true if secondary diagonal contains three O or X
@@ -36,16 +36,16 @@ class TicTacToe(list):
         return len([True for i, elem in enumerate(self)
                     if (elem.x + elem.y == 2) and ((i + 1) % 2 == value)]) == 3
 
-    def check_end_with_move(self, move, value):
+    def __check_end_with_move(self, move, value):
         """
         Checks whether the game is over after last move
         :param move: last move in the game
         :return: true uf game is end
         """
-        return self.check_line(move.x, value) or \
-               self.check_column(move.y, value) or \
-               (move.on_gen_diag()) and (self.check_gen_diag(value)) or \
-               (move.on_snd_diag()) and (self.check_snd_diag(value)) or \
+        return self.__check_line(move.x, value) or \
+               self.__check_column(move.y, value) or \
+               (move.on_gen_diag()) and (self.__check_gen_diag(value)) or \
+               (move.on_snd_diag()) and (self.__check_snd_diag(value)) or \
                len(self) == 9
 
     def check_end(self):
@@ -67,7 +67,7 @@ class TicTacToe(list):
 
         check_new_point(move)
         self.add(move)
-        return self.check_end_with_move(move, len(self) % 2)
+        return self.__check_end_with_move(move, len(self) % 2)
 
     def winner(self):
         """
@@ -75,8 +75,8 @@ class TicTacToe(list):
         :return: return 0 -> O - winner; 1 -> X - winner; -1 -> nobody win (dead heat or game isn't over)
         """
         last, turn = self[len(self) - 1], len(self) % 2
-        if self.check_line(last.x, turn) or self.check_column(last.y, turn) \
-                or self.check_gen_diag(turn) or self.check_snd_diag(turn):
+        if self.__check_line(last.x, turn) or self.__check_column(last.y, turn) \
+                or self.__check_gen_diag(turn) or self.__check_snd_diag(turn):
             return turn
         else:
             return -1

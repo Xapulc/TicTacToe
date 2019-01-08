@@ -19,7 +19,7 @@ class Computer(object):
         self.draw_cost = 0
         self.lose_cost = -1
 
-    def build_count_matrix(self):
+    def __build_count_matrix(self):
         """
         :return: matrix that contains data used for calculating chance matrix
         """
@@ -37,7 +37,7 @@ class Computer(object):
 
         return count_matrix
 
-    def build_chance_matrix(self, count_matrix):
+    def __build_chance_matrix(self, count_matrix):
         """
         :return: matrix that contains probability of victory for each cell
         """
@@ -59,13 +59,12 @@ class Computer(object):
         # print(chance_matrix)
         return chance_matrix
 
-    def learning_move(self):
+    def __learning_move(self):
         """
         The computer calculates the most successful move
         :return: ElemCourse class instance
         """
-        count_matrix = self.build_count_matrix()
-        chance_matrix = self.build_chance_matrix(count_matrix)
+        chance_matrix = self.__build_chance_matrix(self.__build_count_matrix())
 
         max_val = self.lose_cost - 1
         i_max = -1
@@ -82,10 +81,10 @@ class Computer(object):
         """
         Make a computer move
         """
-        self.filter()  # leave games from self.data with same course of game
+        self.__filter()  # leave games from self.data with same course of game
         random_move = rnd.random()
         if self.data and random_move >= probability_random:
-            self.game.add(self.learning_move())
+            self.game.add(self.__learning_move())
         else:
             self.game.add(self.generate_random_elem())
 
@@ -120,7 +119,7 @@ class Computer(object):
                 selection.remove(elem)
         return rnd.choice(selection)
 
-    def filter(self):
+    def __filter(self):
         """
         filters the self.data, removing scripts that are not suitable for self.game
         :return:
