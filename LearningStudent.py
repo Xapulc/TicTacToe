@@ -10,7 +10,7 @@ def create_learning_student_game(teacher_dic, student_dic, beginning_game=None):
     """
     game = LearningGame(teacher_dic.copy(), student_dic.copy(), beginning_game) if not beginning_game \
         else LearningGame(teacher_dic.copy(), student_dic.copy())
-    course_game, is_student_win = game.start(0.15)
+    course_game, is_student_win = game.start(0)
     # print(game)
     return course_game, course_game.winner(), is_student_win
 
@@ -24,10 +24,10 @@ def filter_data(beginning_game, dic):
 
 
 if __name__ == "__main__":
-    count = 10
+    count = 3
     student_wins = 0
     teacher_wins = 0
-    student_dic = {}
+    student_dic = load_dict_from_file("games2.txt")
     teacher_dic = load_dict_from_file("games.txt")
     for i in range(3):
         for j in range(3):
@@ -47,7 +47,7 @@ if __name__ == "__main__":
                             # print(game)
                         print(f"complete on {100 * (27*i + 9*j + 3*k + l)/81:.0f}%")
 
-    print(f"Student has {100 * (student_wins/(72*count)):.2f}%")
-    print(f"Teacher has {100 * (teacher_wins/(72*count)):.2f}%")
+    print(f"Student has {100 * (student_wins/(72*count)):.2f}% wins")
+    print(f"Teacher has {100 * (teacher_wins/(72*count)):.2f}% wins")
     save_dict_to_file(student_dic, "games2.txt")
     print(len(student_dic.keys()))
