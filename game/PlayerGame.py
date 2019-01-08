@@ -7,22 +7,23 @@ from utils.file_worker import load_dict_from_file, save_dict_to_file
 class PlayerGame(object):
     """
     A game with player,
-    call beginning_game() to beginning_game game
+    call beginning_game() to begin game with player
     """
 
     def __init__(self):
         """
-        1 An instance of the class is created for the game;
-        2 Loading data for computer about previous games.
+        1. An instance of the class is created for the game;
+        2. Loading data for computer about previous games.
         """
         self.game = TicTacToe()
         self.player = Player(self.game)
-        self.comp = Computer(load_dict_from_file("../res/games2.txt"), self.game)
+        self.comp = Computer(load_dict_from_file("../res/games2.txt"), self.game)  # It works? Don't touch
         self.comp_turn = 0
 
     def start(self):
         """
         Start a game with computer
+        Main control thread of game
         """
         print("Welcome to TicTacToe, v. 2.7218281828459045")
         while True:

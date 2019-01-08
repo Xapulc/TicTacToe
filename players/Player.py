@@ -2,14 +2,20 @@ from TicTacToe.ElemCourse import ElemCourse
 
 
 class Player(object):
+    """
+    Class that works with user
+    """
 
     def __init__(self, game):
+        """
+        :param game: TicTacToe class instance
+        """
         self.game = game
 
     def player_move(self):
         """
         A player move,
-        get user input (coordinate) like "1, 0" and set in this field O (zero)
+        get user input: (coordinate) like "1 0" and add it into game
         """
         while True:
             try:

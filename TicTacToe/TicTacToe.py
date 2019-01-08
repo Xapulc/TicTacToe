@@ -5,8 +5,8 @@ class TicTacToe(list):
     def check_line(self, index, value):
         """
         :param index: line check index
-        :param value: 0 (for O) or 1 (for X)
-        :return: return true if line contains three O or X
+        :param value: the value on last move: 0 (for O) or 1 (for X)
+        :return: return true if line contains three value
         """
         return len([True for i, elem in enumerate(self)
                     if (elem.x == index) and ((i + 1) % 2 == value)]) == 3
@@ -14,7 +14,7 @@ class TicTacToe(list):
     def check_column(self, index, value):
         """
         :param index: column check index
-        :param value: 0 (for O) or 1 (for X)
+        :param value: the value on last move: 0 (for O) or 1 (for X)
         :return: return true if column contains three O or X
         """
         return len([True for i, elem in enumerate(self)
@@ -23,14 +23,14 @@ class TicTacToe(list):
     def check_gen_diag(self, value):
         """
         :param value: 0 (for O) or 1 (for X)
-        :return: return true if general diagonal contains three O or X
+        :return: the value on last move: 0 (for O) or 1 (for X)
         """
         return len([True for i, elem in enumerate(self)
                     if (elem.x == elem.y) and ((i + 1) % 2 == value)]) == 3
 
     def check_snd_diag(self, value):
         """
-        :param value: 0 (for O) or 1 (for X)
+        :param value: the value on last move: 0 (for O) or 1 (for X)
         :return: return true if secondary diagonal contains three O or X
         """
         return len([True for i, elem in enumerate(self)
@@ -82,10 +82,18 @@ class TicTacToe(list):
             return -1
 
     def add(self, move):
+        """
+        Added new move in game
+        :param move: ElemCourse class instance
+        """
         assert move not in self
         self.append(move)
 
     def find_win_move(self):
+        """
+        Searching winner move (else return none)
+        :return:
+        """
         if len(self) == 9:
             return None
 
@@ -97,6 +105,9 @@ class TicTacToe(list):
         return None
 
     def negative(self):
+        """
+        :return: list than contains empty cells in game
+        """
         res = []
         for i in range(3):
             for j in range(3):

@@ -4,8 +4,15 @@ from TicTacToe.TicTacToe import TicTacToe
 
 
 class Computer(object):
+    """
+    This class is designed to simulate the behavior of a computer in a game.
+    """
 
     def __init__(self, data, game):
+        """
+        :param data: data of game, the basis of computer behavior
+        :param game: TicTacToe class instance
+        """
         self.data = data
         self.game = game
         self.win_cost = 1
@@ -13,6 +20,9 @@ class Computer(object):
         self.lose_cost = -1
 
     def build_count_matrix(self):
+        """
+        :return: matrix that contains data used for calculating chance matrix
+        """
         turn = (len(self.game) + 1) % 2
         count_matrix = [[[0, 0] for _ in range(3)] for _ in range(3)]
         for game, res in self.data.items():
@@ -28,6 +38,9 @@ class Computer(object):
         return count_matrix
 
     def build_chance_matrix(self, count_matrix):
+        """
+        :return: matrix that contains probability of victory for each cell
+        """
         chance_matrix = [[self.draw_cost for _ in range(3)] for _ in range(3)]
         res_find_win_move, danger_elems = self.prepare_next_move()
         if res_find_win_move:
@@ -48,7 +61,7 @@ class Computer(object):
 
     def learning_move(self):
         """
-        The computer calculates the most successful move and return ElemCourse class instance
+        The computer calculates the most successful move
         :return: ElemCourse class instance
         """
         count_matrix = self.build_count_matrix()
@@ -67,7 +80,7 @@ class Computer(object):
 
     def comp_move(self, probability_random=0):
         """
-        A computer move
+        Make a computer move
         """
         self.filter()  # leave games from self.data with same course of game
         random_move = rnd.random()
@@ -77,6 +90,11 @@ class Computer(object):
             self.game.add(self.generate_random_elem())
 
     def prepare_next_move(self):
+        """
+
+        :return: ElemCourse class instance if on next move will be victory (else None) \
+        and danger_elems: matrix that contains elements on which through the course will be a loss if you go to them
+        """
         res_find_win_move = self.game.find_win_move()
         danger_elems = []
         for elem in self.game.negative():
@@ -103,6 +121,10 @@ class Computer(object):
         return rnd.choice(selection)
 
     def filter(self):
+        """
+        filters the self.data, removing scripts that are not suitable for self.game
+        :return:
+        """
         if len(self.game) > 0:
             keys = set(self.data.keys())
             for key in keys:

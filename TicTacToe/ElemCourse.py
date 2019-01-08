@@ -2,7 +2,7 @@ class ElemCourse(object):
 
     def __init__(self, x, y):
         """
-        A player’s move representation that contains the coordinate and sign (X or O)
+        A player’s move representation that contains the coordinate
         """
         assert (0 <= x < 3)
         assert (0 <= y < 3)

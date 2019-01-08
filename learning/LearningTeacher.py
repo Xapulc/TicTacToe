@@ -11,6 +11,7 @@ def create_learning_teacher_game():
 
 
 if __name__ == "__main__":
+    """This script is used for learning teacher"""
     count = 500
     dic = {}
     for i in range(count):

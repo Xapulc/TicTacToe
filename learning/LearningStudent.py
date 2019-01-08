@@ -6,6 +6,9 @@ from TicTacToe.TicTacToe import TicTacToe
 
 def create_learning_student_game(teacher_dic, student_dic, beginning_game=None):
     """
+    :param teacher_dic: teacher's experience
+    :param student_dic: student's experience
+    :param beginning_game: previous game, if none -> start new game
     :return: moves in the game and result (who winner)
     """
     game = LearningGame(teacher_dic.copy(), student_dic.copy(), beginning_game) if not beginning_game \
@@ -16,6 +19,12 @@ def create_learning_student_game(teacher_dic, student_dic, beginning_game=None):
 
 
 def filter_data(beginning_game, dic):
+    """
+    filters the dictionary, removing scripts that are not suitable for this game
+    :param beginning_game: current state of game
+    :param dic: filterable dictionary
+    :return:
+    """
     if len(beginning_game) > 0:
         keys = set(dic.keys())
         for key in keys:
@@ -24,6 +33,9 @@ def filter_data(beginning_game, dic):
 
 
 if __name__ == "__main__":
+    """
+    This is script code for teaching student experience-based teacher
+    """
     count = 3
     student_wins = 0
     teacher_wins = 0

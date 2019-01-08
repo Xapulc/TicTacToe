@@ -6,15 +6,15 @@ from TicTacToe.TicTacToe import TicTacToe
 
 class LearningGame(object):
     """
-    A game between student computer and teacher computer,
-    where teacher computer learns by LearningTeacher,
-    and student computer learns by LearningStudent.
+    A game between student-computer and teacher-computer,
+    where teacher-computer learns by LearningTeacher,
+    and student-computer learns by LearningStudent.
     """
 
     def __init__(self, teacher_dic, student_dic, start=None):
         """
-        1 An instance of the class is created for the game;
-        2 Loading data for computer about previous games.
+        1. An instance of the class is created for the game;
+        2. Loading data for computer about previous games.
         :param teacher_dic: teacher's experience
         :param student_dic: student's experience
         :param start: starting course of game
@@ -29,6 +29,7 @@ class LearningGame(object):
 
     def start(self, probability_random_move):
         """
+        :param probability_random_move: chance of random move
         :return: course of game
         """
         turn = (len(self.game) + 1) % 2
