@@ -4,8 +4,8 @@ class ElemCourse(object):
         """
         A player’s move representation that contains the coordinate
         """
-        assert (0 <= x < 3)
-        assert (0 <= y < 3)
+        assert (0 <= x < 3), "Values must be between 0 and 2"
+        assert (0 <= y < 3), "Values must be between 0 and 2"
         self.x = x
         self.y = y
 

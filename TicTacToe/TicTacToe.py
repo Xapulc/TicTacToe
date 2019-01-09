@@ -86,7 +86,7 @@ class TicTacToe(list):
         Added new move in game
         :param move: ElemCourse class instance
         """
-        assert move not in self
+        assert move not in self, "Cell isn't empty"
         self.append(move)
 
     def find_win_move(self):

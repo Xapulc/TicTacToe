@@ -24,7 +24,7 @@ class Player(object):
                 self.game.add(move)
             except ValueError:
                 print("Too many or too little values or values aren't digital")
-            except AssertionError:
-                print("Values must be between 0 and 2")
+            except AssertionError as err:
+                print(err)
             else:
                 break
