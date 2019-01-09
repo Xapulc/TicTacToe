@@ -1,9 +1,21 @@
 # TicTacToe
 
-Moves of game have written in ElemCourse. These are points with 2 integer coordinates.
+There is traditional tic-tac-toe.
 
-Game and course of game has written in TicTacToe. This is a list, in which has saved moves, and set of functions, which define game.
+If you want to play with computer,
+launch PvE.py.
 
-Creating data for game has written in TestTicTacToe, and data has saved in games.txt as python objects.
+If you want to train your enemy with its teacher,
+launch LearnStudent.py.
 
-Player game has written in PlayerGame. You can do first or second move. The program determines how it needs to make a reciprocal move using a changes matrix.
+If you want to train teacher,
+launch LearnTeacher.py.
+
+The computer has a two-step learning system: student and teacher.
+The teacher learns all possible games,
+which makes its think long when it makes moves.
+The student learns from the teacher,
+and this training is more effective,
+since the student already plays with an experienced opponent,
+so the student’s experience will be less, but better,
+which will allow its to think faster when playing with a person.
