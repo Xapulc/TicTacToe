@@ -39,6 +39,7 @@ class Computer(object):
 
     def __build_chance_matrix(self, count_matrix):
         """
+        :param count_matrix: this needs for calculate chance_matrix
         :return: matrix that contains probability of victory for each cell
         """
         chance_matrix = [[self.draw_cost for _ in range(3)] for _ in range(3)]
@@ -56,7 +57,6 @@ class Computer(object):
         for elem in danger_elems:
             chance_matrix[elem.x][elem.y] = self.lose_cost
 
-        # print(chance_matrix)
         return chance_matrix
 
     def __learning_move(self):
@@ -90,7 +90,6 @@ class Computer(object):
 
     def prepare_next_move(self):
         """
-
         :return: ElemCourse class instance if on next move will be victory (else None) \
         and danger_elems: matrix that contains elements on which through the course will be a loss if you go to them
         """

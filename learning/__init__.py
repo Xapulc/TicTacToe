@@ -1,1 +1,1 @@
-__all__ = ['LearningGame', 'LearningStudent', 'LearningTeacher']
+__all__ = ['LearningGame', 'learning_student.py', 'learning_teacher.py']
