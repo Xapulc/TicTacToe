@@ -3,6 +3,9 @@ from players.Player import Player
 
 
 class GamePvP(object):
+    """
+    Game player vs player
+    """
 
     def __init__(self):
         self.game = TicTacToe()
