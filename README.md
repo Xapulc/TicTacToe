@@ -5,6 +5,9 @@ There is traditional tic-tac-toe.
 If you want to play with computer,
 launch PvE.py.
 
+If you want to play with other player,
+launch PvP.py.
+
 If you want to train your enemy with its teacher,
 launch LearnStudent.py.
 
