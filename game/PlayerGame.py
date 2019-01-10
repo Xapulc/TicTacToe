@@ -67,3 +67,6 @@ class PlayerGame(object):
                 continue
             else:
                 break
+
+    def startWithGUI(self, gui):
+        pass
