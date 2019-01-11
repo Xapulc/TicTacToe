@@ -69,6 +69,7 @@ class TicTacToe(list):
         self.add(move)
         return self.__check_end_with_move(move, self.last_turn())
 
+    @property
     def current_turn(self):
         """
         :return: who should move now, 0 -> O; 1 -> X
@@ -79,7 +80,7 @@ class TicTacToe(list):
         """
         :return: who moved last, 0 -> O; 1 -> X
         """
-        return 1 - self.current_turn()
+        return 1 - self.current_turn
 
     def winner(self):
         """
