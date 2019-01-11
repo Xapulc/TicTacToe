@@ -10,6 +10,18 @@
     <height>480</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>440</width>
+    <height>480</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>440</width>
+    <height>480</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>TicTacToe</string>
   </property>
@@ -46,7 +58,7 @@
     <rect>
      <x>240</x>
      <y>450</y>
-     <width>191</width>
+     <width>181</width>
      <height>20</height>
     </rect>
    </property>
@@ -60,7 +72,10 @@
     <cursorShape>ArrowCursor</cursorShape>
    </property>
    <property name="text">
-    <string>v. 2718281828459045</string>
+    <string>v.3.0</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QSplitter" name="splitter">
