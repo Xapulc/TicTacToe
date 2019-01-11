@@ -58,7 +58,7 @@ class GameWindow(QWidget):
 
     def to_menu(self):
         self.hide()
-        self.reset_game()
+        self.start_pvp()
         self.main_ui.show()
         self.game = TicTacToe()
 
@@ -72,24 +72,24 @@ class GameWindow(QWidget):
             except AssertionError:
                 pass
             else:
-                self.buttons[key].setText("x" if self.game.current_turn() else "o")
+                self.buttons[key].setText("o" if self.game.current_turn else "x")
                 if self.game.check_end():
                     self.end_game()
                 else:
-                    self.status_label.setText(f"{'First' if self.game.current_turn() else 'Second'} player's move")
+                    self.status_label.setText(f"{'First' if self.game.current_turn else 'Second'} player's move")
 
         return helper
 
     def end_game(self):
         self.enabled_all(False)
         self.start_but.setText("Reset")
-        self.start_but.clicked.connect(self.start_pvp())
+        self.start_but.clicked.connect(self.start_pvp)
         self.start_but.show()
 
         if self.game.winner() == -1:
             self.status_label.setText("Nobody wins")
         else:
-            self.status_label.setText(f"{'First' if self.game.current_turn() else 'Second'} player wins!")
+            self.status_label.setText(f"{'Second' if self.game.current_turn else 'First'} player wins!")
 
     def enabled_all(self, flag):
         for but in self.buttons:
