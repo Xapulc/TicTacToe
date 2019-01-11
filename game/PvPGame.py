@@ -24,7 +24,7 @@ class GamePvP(object):
                     print("Congratulations!!!")
                     break
                 elif len(self.game) == 9:
-                    print("Nobody win")
+                    print("Nobody wins")
                     break
                 print("Second player move")
                 self.playerTwo.player_move()
@@ -40,7 +40,6 @@ class GamePvP(object):
                 continue
             else:
                 break
-
 
 
 if __name__ == "__main__":

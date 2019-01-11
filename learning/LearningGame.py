@@ -32,11 +32,10 @@ class LearningGame(object):
         :param probability_random_move: chance of random move
         :return: course of game
         """
-        turn = (len(self.game) + 1) % 2
         while True:
             self.teacher.comp_move(probability_random_move) if self.student_turn == 0 \
                 else self.student.comp_move(probability_random_move)
-            if self.game.winner() == turn:
+            if self.game.winner() == self.game.current_turn():
                 break
             if len(self.game) == 9:  # field is filling
                 break

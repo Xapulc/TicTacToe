@@ -45,10 +45,9 @@ class GameWindow(QWidget):
                         self.but_7, self.but_8, self.but_9]
         self.ico = "ttt.svg"
         self.initUI()
-        self.game = TicTacToe()
+        self.game = None
 
     def initUI(self):
-        # p = QPushButton()
         for but in self.radio_buts:
             but.hide()
         for key, but in enumerate(self.buttons):
@@ -57,48 +56,44 @@ class GameWindow(QWidget):
         self.setWindowIcon(QIcon(self.ico))
         self.to_menu_but.clicked.connect(self.to_menu)
 
-    def enabled_all(self, flag):
-        for but in self.buttons:
-            but.setEnabled(flag)
-
-    def player_move(self, key):
-        def helper():
-            try:
-                self.game.add(ElemCourse(key//3, key%3))
-            except AssertionError:
-                pass
-            else:
-                turn = (len(self.game) + 1) % 2
-                self.buttons[key].setText("x" if turn else "o")
-                if self.game.check_end():
-                    self.end_game()
-                else:
-                    self.status_label.setText(f"{'First' if turn else 'Second'} player's move")
-        return helper
-
-    def end_game(self):
-        self.enabled_all(False)
-        self.start_but.show()
-        if self.game.winner() == -1:
-            self.status_label.setText("Nobody win")
-        else:
-            turn = (len(self.game) + 1) % 2
-            self.status_label.setText(f"{'First' if turn else 'Second'} player wins!")
-        self.game = TicTacToe()
-
-    def set_main_ui(self, main_ui):
-        self.main_ui = main_ui
-
     def to_menu(self):
         self.hide()
         self.reset_game()
         self.main_ui.show()
         self.game = TicTacToe()
 
-    def reset_game(self):
+    def set_main_ui(self, main_ui):
+        self.main_ui = main_ui
+
+    def player_move(self, key):
+        def helper():
+            try:
+                self.game.add(ElemCourse(key // 3, key % 3))
+            except AssertionError:
+                pass
+            else:
+                self.buttons[key].setText("x" if self.game.current_turn() else "o")
+                if self.game.check_end():
+                    self.end_game()
+                else:
+                    self.status_label.setText(f"{'First' if self.game.current_turn() else 'Second'} player's move")
+
+        return helper
+
+    def end_game(self):
+        self.enabled_all(False)
+        self.start_but.setText("Reset")
+        self.start_but.clicked.connect(self.start_pvp())
+        self.start_but.show()
+
+        if self.game.winner() == -1:
+            self.status_label.setText("Nobody wins")
+        else:
+            self.status_label.setText(f"{'First' if self.game.current_turn() else 'Second'} player wins!")
+
+    def enabled_all(self, flag):
         for but in self.buttons:
-            but.setText("")
-        self.enabled_all(True)
+            but.setEnabled(flag)
 
     def pve(self):
         for but in self.radio_buts:
@@ -114,18 +109,19 @@ class GameWindow(QWidget):
         for but in self.buttons:
             but.show()
         self.enabled_all(False)
-        self.start_but.setText("Start")
         self.status_label.setText("")
+        self.start_but.setText("Start")
         self.start_but.show()
         self.start_but.clicked.connect(self.start_pvp)
         self.show()
 
     def start_pvp(self):
+        for but in self.buttons:
+            but.setText("")
         self.start_but.hide()
-        self.start_but.setText("Reset")
-        self.start_but.clicked.connect(self.reset_game)
         self.enabled_all(True)
         self.status_label.setText("First player's move")
+        self.game = TicTacToe()
 
     def start_pve(self):
         self.start_but.hide()
@@ -140,14 +136,17 @@ class GameGUI(object):
     def __init__(self):
         self.main_ui = MainWindow()
         self.main_ui.show()
+
         self.game_ui = GameWindow()
         self.game_ui.hide()
+
         self.game_ui.set_main_ui(self.main_ui)
         self.main_ui.set_game_ui(self.game_ui)
 
 
 if __name__ == "__main__":
     import sys
+
     app = QApplication(sys.argv)
     window = GameGUI()
     sys.exit(app.exec_())

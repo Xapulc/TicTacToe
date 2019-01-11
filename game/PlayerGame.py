@@ -46,7 +46,7 @@ class PlayerGame(object):
                     print("Congratulations!!!")
                     break
                 elif len(self.game) == 9:
-                    print("Nobody win")
+                    print("Nobody wins")
                     break
 
                 self.comp.comp_move() if self.comp_turn == 0 else self.player.player_move()
