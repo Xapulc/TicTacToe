@@ -100,14 +100,23 @@ class GameWindow(QWidget):
 
         return helper
 
+    def print_hello(self, arg="default"):
+
+        def helper():
+            print(arg)
+        return helper
+
     def end_game(self):
         self.enabled_all(False)
         self.start_but.setText("Reset")
+        self.start_but.show()
         if self.comp_turn is None:
+            self.start_but.clicked.disconnect(self.start_pvp)
             self.start_but.clicked.connect(self.pvp)
         else:
+            self.start_but.clicked.disconnect(self.start_pve)
             self.start_but.clicked.connect(self.pve)
-        self.start_but.show()
+            # print("HEY")
 
         if self.game.winner() == -1:
             self.status_label.setText("Nobody wins")
@@ -126,30 +135,38 @@ class GameWindow(QWidget):
             but.show()
         self.radio_buts[0].setChecked(True)
         for but in self.buttons:
+            but.setText("")
             but.show()
         self.enabled_all(False)
         self.status_label.setText("")
         self.start_but.setText("Start")
-        self.start_but.show()
+        try:
+            self.start_but.clicked.disconnect(self.pve)
+        except TypeError:
+            pass
         self.start_but.clicked.connect(self.start_pve)
+        self.start_but.show()
         self.comp_turn = None
         self.show()
 
     def pvp(self):
         for but in self.buttons:
+            but.setText("")
             but.show()
         for but in self.radio_buts:
             but.hide()
         self.enabled_all(False)
         self.status_label.setText("")
         self.start_but.setText("Start")
-        self.start_but.show()
+        try:
+            self.start_but.clicked.disconnect(self.pvp)
+        except TypeError:
+            pass
         self.start_but.clicked.connect(self.start_pvp)
+        self.start_but.show()
         self.show()
 
     def start_prepare(self):
-        for but in self.buttons:
-            but.setText("")
         self.start_but.hide()
         self.enabled_all(True)
         self.game = TicTacToe()
