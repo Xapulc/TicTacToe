@@ -12,7 +12,7 @@ class Player(object):
         """
         self.game = game
 
-    def player_move(self):
+    def move(self):
         """
         A player move,
         get user input: (coordinate) like "1 0" and add it into game

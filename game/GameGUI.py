@@ -1,3 +1,5 @@
+from time import sleep
+
 from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QFrame, QMessageBox, QLabel
 from PyQt5 import uic
 from PyQt5.QtCore import QCoreApplication
@@ -5,15 +7,17 @@ from PyQt5.QtGui import QIcon
 
 from TicTacToe.ElemCourse import ElemCourse
 from TicTacToe.TicTacToe import TicTacToe
+from players.Computer import Computer
+from utils.file_worker import load_dict_from_file
 
 
 class MainWindow(QWidget):
 
     def __init__(self):
         QWidget.__init__(self)
-        uic.loadUi("frame.ui", self)
+        uic.loadUi("game/frame.ui", self)
         self.game_ui = None
-        self.ico = "ttt.svg"
+        self.ico = "game/ttt.svg"
         self.initUI()
 
     def initUI(self):
@@ -38,14 +42,16 @@ class GameWindow(QWidget):
 
     def __init__(self):
         QWidget.__init__(self)
-        uic.loadUi("game.ui", self)
+        uic.loadUi("game/game.ui", self)
         self.radio_buts = [self.pl_first, self.comp_first]
         self.buttons = [self.but_1, self.but_2, self.but_3,
                         self.but_4, self.but_5, self.but_6,
                         self.but_7, self.but_8, self.but_9]
-        self.ico = "ttt.svg"
+        self.ico = "game/ttt.svg"
         self.initUI()
         self.game = None
+        self.comp_turn = None
+        self.comp = None
 
     def initUI(self):
         for but in self.radio_buts:
@@ -65,10 +71,23 @@ class GameWindow(QWidget):
     def set_main_ui(self, main_ui):
         self.main_ui = main_ui
 
+    def comp_move(self):
+        print("COMP_MOVE")
+        self.comp.move()
+        print("COMP_MOVE2")
+        last_move = self.game[len(self.game) - 1]
+        self.buttons[3*last_move.x + last_move.y].setText("o" if self.game.current_turn else "x")
+        if self.game.check_end():
+            self.end_game()
+        else:
+            self.status_label.setText(f"{'First' if self.game.current_turn else 'Second'} player's move")
+
     def player_move(self, key):
         def helper():
+            print(key)
             try:
                 self.game.add(ElemCourse(key // 3, key % 3))
+                print(self.game)
             except AssertionError:
                 pass
             else:
@@ -77,13 +96,16 @@ class GameWindow(QWidget):
                     self.end_game()
                 else:
                     self.status_label.setText(f"{'First' if self.game.current_turn else 'Second'} player's move")
+                    # sleep(5)
+                    if self.comp_turn == 0 or self.comp_turn == 1:  # if defined
+                        self.comp_move()
 
         return helper
 
     def end_game(self):
         self.enabled_all(False)
         self.start_but.setText("Reset")
-        self.start_but.clicked.connect(self.start_pvp)
+        self.start_but.clicked.connect(self.start_prepare)  # here should do start pvp or start pve
         self.start_but.show()
 
         if self.game.winner() == -1:
@@ -101,8 +123,13 @@ class GameWindow(QWidget):
         self.radio_buts[0].setChecked(True)
         for but in self.buttons:
             but.show()
-        self.start_but.clicked.connect(self.start_pve)
         self.enabled_all(False)
+        self.status_label.setText("")
+        self.start_but.setText("Start")
+        self.start_but.show()
+        self.start_but.clicked.connect(self.start_pve)
+        self.comp_turn = None
+        self.comp = Computer(load_dict_from_file("student_experience.txt"), self.game)
         self.show()
 
     def pvp(self):
@@ -115,7 +142,7 @@ class GameWindow(QWidget):
         self.start_but.clicked.connect(self.start_pvp)
         self.show()
 
-    def start_pvp(self):
+    def start_prepare(self):
         for but in self.buttons:
             but.setText("")
         self.start_but.hide()
@@ -123,12 +150,17 @@ class GameWindow(QWidget):
         self.status_label.setText("First player's move")
         self.game = TicTacToe()
 
+    def start_pvp(self):
+        self.start_prepare()
+
     def start_pve(self):
-        self.start_but.hide()
-        self.start_but.setText("Reset")
-        self.start_but.clicked.connect(self.reset_game)
+        self.start_prepare()
+        self.comp_turn = 0 if self.radio_buts[0].isChecked() else 1
         for but in self.radio_buts:
             but.hide()
+
+        if self.comp_turn == 1:
+            self.comp_move()
 
 
 class GameGUI(object):
@@ -142,11 +174,3 @@ class GameGUI(object):
 
         self.game_ui.set_main_ui(self.main_ui)
         self.main_ui.set_game_ui(self.game_ui)
-
-
-if __name__ == "__main__":
-    import sys
-
-    app = QApplication(sys.argv)
-    window = GameGUI()
-    sys.exit(app.exec_())

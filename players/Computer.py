@@ -26,9 +26,9 @@ class Computer(object):
         count_matrix = [[[0, 0] for _ in range(3)] for _ in range(3)]
         for game, res in self.data.items():
             move = game[len(self.game)]
-            if res == self.game.current_turn():
+            if res == self.game.current_turn:
                 count_matrix[move.x][move.y][0] += self.win_cost / (len(game) - len(self.game))
-            elif res == self.game.last_turn():
+            elif res == self.game.last_turn:
                 count_matrix[move.x][move.y][0] += self.lose_cost / (len(game) - len(self.game))
             else:
                 count_matrix[move.x][move.y][0] += self.draw_cost / (len(game) - len(self.game))
@@ -76,11 +76,13 @@ class Computer(object):
                     max_val = chance_matrix[i][j]
         return ElemCourse(i_max, j_max)
 
-    def comp_move(self, probability_random=0):
+    def move(self, probability_random=0):
         """
         Make a computer move
         """
+        print("Start filter")
         self.__filter()  # leave games from self.data with same course of game
+        print("End filter")
         random_move = rnd.random()
         if self.data and random_move >= probability_random:
             self.game.add(self.__learning_move())
@@ -122,8 +124,12 @@ class Computer(object):
         filters the self.data, removing scripts that are not suitable for self.game
         :return:
         """
+        print("Start")
+        print(self.game)
         if len(self.game) > 0:
+            print("Len > 0")
             keys = set(self.data.keys())
             for key in keys:
                 if key[:len(self.game)] != tuple(self.game):
                     self.data.pop(key)
+        print("End")
