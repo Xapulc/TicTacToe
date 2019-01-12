@@ -80,9 +80,7 @@ class Computer(object):
         """
         Make a computer move
         """
-        print("Start filter")
-        self.__filter()  # leave games from self.data with same course of game
-        print("End filter")
+        self.__filter()
         random_move = rnd.random()
         if self.data and random_move >= probability_random:
             self.game.add(self.__learning_move())
@@ -124,12 +122,8 @@ class Computer(object):
         filters the self.data, removing scripts that are not suitable for self.game
         :return:
         """
-        print("Start")
-        print(self.game)
         if len(self.game) > 0:
-            print("Len > 0")
             keys = set(self.data.keys())
             for key in keys:
                 if key[:len(self.game)] != tuple(self.game):
                     self.data.pop(key)
-        print("End")

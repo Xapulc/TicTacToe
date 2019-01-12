@@ -72,22 +72,18 @@ class GameWindow(QWidget):
         self.main_ui = main_ui
 
     def comp_move(self):
-        print("COMP_MOVE")
         self.comp.move()
-        print("COMP_MOVE2")
         last_move = self.game[len(self.game) - 1]
         self.buttons[3*last_move.x + last_move.y].setText("o" if self.game.current_turn else "x")
         if self.game.check_end():
             self.end_game()
         else:
-            self.status_label.setText(f"{'First' if self.game.current_turn else 'Second'} player's move")
+            self.status_label.setText("Player's move")
 
     def player_move(self, key):
         def helper():
-            print(key)
             try:
                 self.game.add(ElemCourse(key // 3, key % 3))
-                print(self.game)
             except AssertionError:
                 pass
             else:
@@ -95,23 +91,34 @@ class GameWindow(QWidget):
                 if self.game.check_end():
                     self.end_game()
                 else:
-                    self.status_label.setText(f"{'First' if self.game.current_turn else 'Second'} player's move")
                     # sleep(5)
-                    if self.comp_turn == 0 or self.comp_turn == 1:  # if defined
+                    if self.comp_turn is not None:
+                        self.status_label.setText(f"Computer's move")
                         self.comp_move()
+                    else:
+                        self.status_label.setText(f"{'First' if self.game.current_turn else 'Second'} player's move")
 
         return helper
 
     def end_game(self):
         self.enabled_all(False)
         self.start_but.setText("Reset")
-        self.start_but.clicked.connect(self.start_prepare)  # here should do start pvp or start pve
         self.start_but.show()
+        if self.comp_turn is None:
+            self.start_but.clicked.disconnect(self.start_pvp)
+            self.start_but.clicked.connect(self.pvp)
+        else:
+            self.start_but.clicked.disconnect(self.start_pve)
+            self.start_but.clicked.connect(self.pve)
+            # print("HEY")
 
         if self.game.winner() == -1:
             self.status_label.setText("Nobody wins")
         else:
-            self.status_label.setText(f"{'Second' if self.game.current_turn else 'First'} player wins!")
+            if self.comp_turn is None:
+                self.status_label.setText(f"{'Second' if self.game.current_turn else 'First'} player wins!")
+            else:
+                self.status_label.setText(f"{'Computer' if self.comp_turn == self.game.winner() else 'Player'} wins!")
 
     def enabled_all(self, flag):
         for but in self.buttons:
@@ -122,45 +129,58 @@ class GameWindow(QWidget):
             but.show()
         self.radio_buts[0].setChecked(True)
         for but in self.buttons:
+            but.setText("")
             but.show()
         self.enabled_all(False)
         self.status_label.setText("")
         self.start_but.setText("Start")
-        self.start_but.show()
+        try:
+            self.start_but.clicked.disconnect(self.pve)
+        except TypeError:
+            pass
         self.start_but.clicked.connect(self.start_pve)
+        self.start_but.show()
         self.comp_turn = None
-        self.comp = Computer(load_dict_from_file("student_experience.txt"), self.game)
         self.show()
 
     def pvp(self):
         for but in self.buttons:
+            but.setText("")
             but.show()
+        for but in self.radio_buts:
+            but.hide()
         self.enabled_all(False)
         self.status_label.setText("")
         self.start_but.setText("Start")
-        self.start_but.show()
+        try:
+            self.start_but.clicked.disconnect(self.pvp)
+        except TypeError:
+            pass
         self.start_but.clicked.connect(self.start_pvp)
+        self.start_but.show()
         self.show()
 
     def start_prepare(self):
-        for but in self.buttons:
-            but.setText("")
         self.start_but.hide()
         self.enabled_all(True)
-        self.status_label.setText("First player's move")
         self.game = TicTacToe()
 
     def start_pvp(self):
         self.start_prepare()
+        self.status_label.setText("First player's move")
 
     def start_pve(self):
         self.start_prepare()
+        self.comp = Computer(load_dict_from_file("student_experience.txt"), self.game)
         self.comp_turn = 0 if self.radio_buts[0].isChecked() else 1
         for but in self.radio_buts:
             but.hide()
 
         if self.comp_turn == 1:
+            self.status_label.setText("Computer's move")
             self.comp_move()
+        else:
+            self.status_label.setText("Player's move")
 
 
 class GameGUI(object):
