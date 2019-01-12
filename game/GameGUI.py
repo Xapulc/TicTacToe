@@ -100,12 +100,6 @@ class GameWindow(QWidget):
 
         return helper
 
-    def print_hello(self, arg="default"):
-
-        def helper():
-            print(arg)
-        return helper
-
     def end_game(self):
         self.enabled_all(False)
         self.start_but.setText("Reset")
