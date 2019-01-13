@@ -145,6 +145,7 @@ class GameWindow(QWidget):
             self.status_label.setText("")
 
             self.start_res_but.setText("Start")
+            # Never disconnect previous func
             try:
                 self.start_res_but.clicked.disconnect(self.game_window_prepare(mode))
             except TypeError:
@@ -167,6 +168,7 @@ class GameWindow(QWidget):
 
     def pvp_start(self):
         self.game_start()
+        self.comp_turn = None
         self.status_label.setText("First player's move")
 
     def pve_start(self):
