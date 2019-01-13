@@ -87,6 +87,10 @@ class Computer(object):
         else:
             self.game.add(self.generate_random_elem())
 
+    def hint_move(self):
+        self.__filter()
+        return self.__learning_move()
+
     def prepare_next_move(self):
         """
         :return: ElemCourse class instance if on next move will be victory (else None) \

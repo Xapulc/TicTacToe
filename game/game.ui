@@ -105,7 +105,7 @@
     <string>To main menu</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="start_but">
+  <widget class="QPushButton" name="start_res_but">
    <property name="geometry">
     <rect>
      <x>30</x>
@@ -180,7 +180,9 @@
    </property>
    <property name="font">
     <font>
+     <family>Algerian</family>
      <pointsize>48</pointsize>
+     <italic>false</italic>
     </font>
    </property>
    <property name="cursor">
@@ -210,7 +212,9 @@
    </property>
    <property name="font">
     <font>
+     <family>Algerian</family>
      <pointsize>48</pointsize>
+     <italic>false</italic>
     </font>
    </property>
    <property name="cursor">
@@ -231,7 +235,9 @@
    </property>
    <property name="font">
     <font>
+     <family>Algerian</family>
      <pointsize>48</pointsize>
+     <italic>false</italic>
     </font>
    </property>
    <property name="cursor">
@@ -252,7 +258,9 @@
    </property>
    <property name="font">
     <font>
+     <family>Algerian</family>
      <pointsize>48</pointsize>
+     <italic>false</italic>
     </font>
    </property>
    <property name="cursor">
@@ -273,7 +281,9 @@
    </property>
    <property name="font">
     <font>
+     <family>Algerian</family>
      <pointsize>48</pointsize>
+     <italic>false</italic>
     </font>
    </property>
    <property name="cursor">
@@ -294,7 +304,9 @@
    </property>
    <property name="font">
     <font>
+     <family>Algerian</family>
      <pointsize>48</pointsize>
+     <italic>false</italic>
     </font>
    </property>
    <property name="cursor">
@@ -315,7 +327,9 @@
    </property>
    <property name="font">
     <font>
+     <family>Algerian</family>
      <pointsize>48</pointsize>
+     <italic>false</italic>
     </font>
    </property>
    <property name="cursor">
@@ -336,7 +350,9 @@
    </property>
    <property name="font">
     <font>
+     <family>Algerian</family>
      <pointsize>48</pointsize>
+     <italic>false</italic>
     </font>
    </property>
    <property name="cursor">
@@ -357,7 +373,9 @@
    </property>
    <property name="font">
     <font>
+     <family>Algerian</family>
      <pointsize>48</pointsize>
+     <italic>false</italic>
     </font>
    </property>
    <property name="cursor">
@@ -407,6 +425,24 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
+  <widget class="QPushButton" name="hint_but">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>360</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Malgun Gothic Semilight</family>
+    </font>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>but_7</zorder>
   <zorder>but_1</zorder>
   <zorder>but_8</zorder>
@@ -417,15 +453,15 @@
   <zorder>but_4</zorder>
   <zorder>but_6</zorder>
   <zorder>to_menu_but</zorder>
-  <zorder>start_but</zorder>
+  <zorder>start_res_but</zorder>
   <zorder>pl_first</zorder>
   <zorder>comp_first</zorder>
-  <zorder></zorder>
   <zorder>line_5</zorder>
   <zorder>line_2</zorder>
   <zorder>line_3</zorder>
   <zorder>line_4</zorder>
   <zorder>status_label</zorder>
+  <zorder>hint_but</zorder>
  </widget>
  <resources/>
  <connections/>
