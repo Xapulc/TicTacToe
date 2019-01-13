@@ -10,24 +10,38 @@ from utils.file_worker import load_dict_from_file, save_dict_to_file
 
 
 class MainWindow(QWidget):
+    """
+    Class is responsible for window with main menu
+    """
 
     def __init__(self):
         QWidget.__init__(self)
-        uic.loadUi("game/frame.ui", self)
         self.game_ui = None
         self.ico = "game/ttt.svg"
         self.initUI()
 
     def initUI(self):
+        """
+        Initialisation GUI and connecting buttons with functions
+        """
+        uic.loadUi("game/frame.ui", self)
         self.setWindowIcon(QIcon(self.ico))
         self.exit_but.clicked.connect(QCoreApplication.instance().quit)
         self.pve_but.clicked.connect(self.mode_game_but_clicked("pve"))
         self.pvp_but.clicked.connect(self.mode_game_but_clicked("pvp"))
 
     def set_game_ui(self, game_ui):
+        """
+        This need for connection with game UI and main menu UI
+        :param game_ui: GameWindow class instance
+        """
         self.game_ui = game_ui
 
     def mode_game_but_clicked(self, mode):
+        """
+        :param mode: pvp or pve
+        :return: an function which, at the press of a button, prepares the window for the corresponding game mode
+        """
         def helper():
             self.hide()
             self.game_ui.pve_window_prepare() if mode == "pve" else self.game_ui.pvp_window_prepare()
@@ -36,6 +50,10 @@ class MainWindow(QWidget):
 
 
 class GameWindow(QWidget):
+    """
+    Class is responsible for window with game
+    Contains playing field, start/reset, to main menu, hint and radio buttons
+    """
 
     def __init__(self):
         QWidget.__init__(self)
@@ -46,7 +64,6 @@ class GameWindow(QWidget):
                         self.but_7, self.but_8, self.but_9]
         self.ico = "game/ttt.svg"
         self.but_ico = "game/but_ico.svg"
-        self.initUI()
         self.game = None
         self.pvp_window_prepare = self.game_window_prepare("pvp")
         self.pve_window_prepare = self.game_window_prepare("pve")
@@ -54,8 +71,12 @@ class GameWindow(QWidget):
         self.comp = None
         self.last_hint_num = None
         self.experience_path = "old_student_experience.txt"
+        self.initUI()
 
     def initUI(self):
+        """
+        Initialisation GUI and connecting buttons with functions
+        """
         for but in self.radio_buts:
             but.hide()
         for key, but in enumerate(self.buttons):
@@ -68,20 +89,33 @@ class GameWindow(QWidget):
         self.hint_but.setIconSize(QSize(40, 40))
 
     def hint(self):
+        """
+        Computer calculates more effective move and set in cell "!"
+        """
         el = self.comp.hint_move()
         self.last_hint_num = 3 * el.x + el.y
         self.buttons[self.last_hint_num].setText("!")
 
     def to_menu(self):
+        """
+        Function for to_menu_but
+        """
         self.hide()
         self.game_start()
         self.main_ui.show()
         self.game = TicTacToe()
 
     def set_main_ui(self, main_ui):
+        """
+        This need for connection with game UI and main menu UI
+        :param main_ui: MainWindow class instance
+        """
         self.main_ui = main_ui
 
     def comp_move(self):
+        """
+        Make computer move in this game and checking end
+        """
         self.comp.move()
         last_move = self.game[len(self.game) - 1]
         self.buttons[3*last_move.x + last_move.y].setText("o" if self.game.current_turn else "x")
@@ -91,6 +125,10 @@ class GameWindow(QWidget):
             self.status_label.setText("Player's move")
 
     def player_move(self, key):
+        """
+        :param key: number of button
+        :return: an function which, at the press of a button, set in cell O or X
+        """
         def helper():
             try:
                 self.game.add(ElemCourse(key // 3, key % 3))
@@ -113,6 +151,9 @@ class GameWindow(QWidget):
         return helper
 
     def end_game(self):
+        """
+        Final actions at the end of the game
+        """
         self.enabled_all(False)
         self.start_res_but.setText("Reset")
         self.start_res_but.show()
@@ -138,10 +179,18 @@ class GameWindow(QWidget):
             save_dict_to_file(data, self.experience_path)
 
     def enabled_all(self, flag):
+        """
+        makes all buttons responsible for the game [un]available for pressing
+        :param flag: True (enabled) or False (disabled)
+        """
         for but in self.buttons:
             but.setEnabled(flag)
 
     def game_window_prepare(self, mode):
+        """
+        :param mode: pvp or pve
+        :return: an function which, at the press of a button, prepare game for pve or pvp
+        """
         def helper():
             for but in self.buttons:
                 but.setText("")
@@ -173,6 +222,9 @@ class GameWindow(QWidget):
         return helper
 
     def game_start(self):
+        """
+        help function, same actions for pve and pvp
+        """
         self.start_res_but.hide()
         self.hint_but.show()
         self.enabled_all(True)
@@ -180,11 +232,17 @@ class GameWindow(QWidget):
         self.comp = Computer(load_dict_from_file("student_experience.txt"), self.game)
 
     def pvp_start(self):
+        """
+        function for start button in pvp game
+        """
         self.game_start()
         self.comp_turn = None
         self.status_label.setText("First player's move")
 
     def pve_start(self):
+        """
+        function for start button in pve game
+        """
         self.game_start()
         self.comp_turn = 0 if self.radio_buts[0].isChecked() else 1
         for but in self.radio_buts:
@@ -198,6 +256,9 @@ class GameWindow(QWidget):
 
 
 class GameGUI(object):
+    """
+    Help class for connecting MainWindow and GameWindow together
+    """
 
     def __init__(self):
         self.main_ui = MainWindow()

@@ -88,6 +88,9 @@ class Computer(object):
             self.game.add(self.generate_random_elem())
 
     def hint_move(self):
+        """
+        :return: ElemCourse class instance, more effective move in current game
+        """
         self.__filter()
         return self.__learning_move()
 

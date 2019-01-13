@@ -1,1 +1,1 @@
-__all__ = ['PlayerGame', 'PvPGame']
+__all__ = ['PlayerGame', 'PvPGame', 'GameGUI']
