@@ -14,6 +14,9 @@ launch LearnStudent.py.
 If you want to train teacher,
 launch LearnTeacher.py.
 
+If you want to play in graphic move,
+launch GameGUI.py
+
 The computer has a two-step learning system: student and teacher.
 The teacher learns all possible games,
 which makes its think long when it makes moves.
