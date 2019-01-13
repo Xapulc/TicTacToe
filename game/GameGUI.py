@@ -42,8 +42,12 @@ class MainWindow(QWidget):
         :param mode: pvp or pve
         :return: an function which, at the press of a button, prepares the window for the corresponding game mode
         """
+
         def helper():
             self.hide()
+            self.game_ui.draws_num = 0
+            self.game_ui.player1_win_num = 0
+            self.game_ui.player2_win_num = 0
             self.game_ui.pve_window_prepare() if mode == "pve" else self.game_ui.pvp_window_prepare()
 
         return helper
@@ -67,6 +71,9 @@ class GameWindow(QWidget):
         self.game = None
         self.pvp_window_prepare = self.game_window_prepare("pvp")
         self.pve_window_prepare = self.game_window_prepare("pve")
+        self.draws_num = 0
+        self.player1_wins_num = 0
+        self.player2_wins_num = 0
         self.comp_turn = None
         self.comp = None
         self.last_hint_num = None
@@ -118,7 +125,7 @@ class GameWindow(QWidget):
         """
         self.comp.move()
         last_move = self.game[len(self.game) - 1]
-        self.buttons[3*last_move.x + last_move.y].setText("o" if self.game.current_turn else "x")
+        self.buttons[3 * last_move.x + last_move.y].setText("o" if self.game.current_turn else "x")
         if self.game.check_end():
             self.end_game()
         else:
@@ -150,6 +157,38 @@ class GameWindow(QWidget):
 
         return helper
 
+    def statistic(self):
+        if self.game.winner() == -1:
+            self.draws_num += 1
+            if self.comp_turn is None:
+                return "Nobody wins\n" \
+                      + f"First player's wins: {self.player1_wins_num}\n" \
+                      + f"Second player's wins: {self.player2_wins_num}\n" \
+                      + f"Draws: {self.draws_num}"
+            else:
+                return "Nobody wins\n" \
+                      + f"Player's wins: {self.player1_wins_num}\n" \
+                      + f"Computer's wins: {self.player2_wins_num}\n" \
+                      + f"Draws: {self.draws_num}"
+
+        else:
+            if self.comp_turn is None:
+                self.player1_wins_num += self.game.current_turn
+                self.player2_wins_num += 1 - self.game.current_turn
+                return f"{'Second' if self.game.current_turn else 'First'} player wins!\n" \
+                       + f"First player's wins: {self.player1_wins_num}\n" \
+                       + f"Second player's wins: {self.player2_wins_num}\n" \
+                       + f"Draws: {self.draws_num}"
+            else:
+                if self.comp_turn == self.game.winner():
+                    self.player2_wins_num += 1
+                else:
+                    self.player1_wins_num += 1
+                return f"{'Computer' if self.comp_turn == self.game.winner() else 'Player'} wins!\n" \
+                       + f"Player's wins: {self.player1_wins_num}\n" \
+                       + f"Computer's wins: {self.player2_wins_num}\n" \
+                       + f"Draws: {self.draws_num}"
+
     def end_game(self):
         """
         Final actions at the end of the game
@@ -165,13 +204,7 @@ class GameWindow(QWidget):
             self.start_res_but.clicked.disconnect(self.pve_start)
             self.start_res_but.clicked.connect(self.pve_window_prepare)
 
-        if self.game.winner() == -1:
-            self.status_label.setText("Nobody wins")
-        else:
-            if self.comp_turn is None:
-                self.status_label.setText(f"{'Second' if self.game.current_turn else 'First'} player wins!")
-            else:
-                self.status_label.setText(f"{'Computer' if self.comp_turn == self.game.winner() else 'Player'} wins!")
+        self.status_label.setText(self.statistic())
 
         if self.comp_turn is not None:
             data = load_dict_from_file(self.experience_path)
@@ -191,6 +224,7 @@ class GameWindow(QWidget):
         :param mode: pvp or pve
         :return: an function which, at the press of a button, prepare game for pve or pvp
         """
+
         def helper():
             for but in self.buttons:
                 but.setText("")
