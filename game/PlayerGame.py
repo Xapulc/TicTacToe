@@ -17,7 +17,7 @@ class PlayerGame(object):
         """
         self.game = TicTacToe()
         self.player = Player(self.game)
-        self.experience_path = "student_experience.txt"
+        self.experience_path = "old_student_experience.txt"
         self.comp = Computer(load_dict_from_file(self.experience_path), self.game)
         self.comp_turn = 0
 
@@ -39,17 +39,17 @@ class PlayerGame(object):
 
             self.comp_turn = int(who_first)
             while True:
-                self.player.player_move() if self.comp_turn == 0 else self.comp.comp_move()
+                self.player.move() if self.comp_turn == 0 else self.comp.move()
                 print(self.game)
                 if self.game.winner() == 1:
                     print("You win!!!") if self.comp_turn == 0 else print("You lose")
                     print("Congratulations!!!")
                     break
                 elif len(self.game) == 9:
-                    print("Nobody win")
+                    print("Nobody wins")
                     break
 
-                self.comp.comp_move() if self.comp_turn == 0 else self.player.player_move()
+                self.comp.move() if self.comp_turn == 0 else self.player.move()
                 print(self.game)
                 if self.game.winner() == 0:
                     print("You lose") if self.comp_turn == 0 else print("You win!!!")

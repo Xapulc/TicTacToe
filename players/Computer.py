@@ -23,13 +23,12 @@ class Computer(object):
         """
         :return: matrix that contains data used for calculating chance matrix
         """
-        turn = (len(self.game) + 1) % 2
         count_matrix = [[[0, 0] for _ in range(3)] for _ in range(3)]
         for game, res in self.data.items():
             move = game[len(self.game)]
-            if res == turn:
+            if res == self.game.current_turn:
                 count_matrix[move.x][move.y][0] += self.win_cost / (len(game) - len(self.game))
-            elif res == 1 - turn:
+            elif res == self.game.last_turn:
                 count_matrix[move.x][move.y][0] += self.lose_cost / (len(game) - len(self.game))
             else:
                 count_matrix[move.x][move.y][0] += self.draw_cost / (len(game) - len(self.game))
@@ -77,16 +76,23 @@ class Computer(object):
                     max_val = chance_matrix[i][j]
         return ElemCourse(i_max, j_max)
 
-    def comp_move(self, probability_random=0):
+    def move(self, probability_random=0):
         """
         Make a computer move
         """
-        self.__filter()  # leave games from self.data with same course of game
+        self.__filter()
         random_move = rnd.random()
         if self.data and random_move >= probability_random:
             self.game.add(self.__learning_move())
         else:
             self.game.add(self.generate_random_elem())
+
+    def hint_move(self):
+        """
+        :return: ElemCourse class instance, more effective move in current game
+        """
+        self.__filter()
+        return self.__learning_move()
 
     def prepare_next_move(self):
         """

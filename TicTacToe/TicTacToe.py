@@ -67,17 +67,31 @@ class TicTacToe(list):
 
         check_new_point(move)
         self.add(move)
-        return self.__check_end_with_move(move, len(self) % 2)
+        return self.__check_end_with_move(move, self.last_turn)
+
+    @property
+    def current_turn(self):
+        """
+        :return: who should move now, 0 -> O; 1 -> X
+        """
+        return (len(self) + 1) % 2
+
+    @property
+    def last_turn(self):
+        """
+        :return: who moved last, 0 -> O; 1 -> X
+        """
+        return 1 - self.current_turn
 
     def winner(self):
         """
         Checks whether there is a winner in the game at the moment
         :return: return 0 -> O - winner; 1 -> X - winner; -1 -> nobody win (dead heat or game isn't over)
         """
-        last, turn = self[len(self) - 1], len(self) % 2
-        if self.__check_line(last.x, turn) or self.__check_column(last.y, turn) \
-                or self.__check_gen_diag(turn) or self.__check_snd_diag(turn):
-            return turn
+        last = self[len(self) - 1]
+        if self.__check_line(last.x, self.last_turn) or self.__check_column(last.y, self.last_turn) \
+                or self.__check_gen_diag(self.last_turn) or self.__check_snd_diag(self.last_turn):
+            return self.last_turn
         else:
             return -1
 

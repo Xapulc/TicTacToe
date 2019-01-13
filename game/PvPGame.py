@@ -17,17 +17,17 @@ class GamePvP(object):
         while True:
             while True:
                 print("First player move")
-                self.playerOne.player_move()
+                self.playerOne.move()
                 print(self.game)
                 if self.game.winner() == 1:
                     print("First player win!!!")
                     print("Congratulations!!!")
                     break
                 elif len(self.game) == 9:
-                    print("Nobody win")
+                    print("Nobody wins")
                     break
                 print("Second player move")
-                self.playerTwo.player_move()
+                self.playerTwo.move()
                 print(self.game)
                 if self.game.winner() == 0:
                     print("Second player win!!!")
@@ -40,10 +40,3 @@ class GamePvP(object):
                 continue
             else:
                 break
-
-
-if __name__ == "__main__":
-    game = GamePvP()
-    game.start()
-
-

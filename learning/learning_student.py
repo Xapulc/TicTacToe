@@ -41,7 +41,7 @@ def learn_student(count, probability_random_move):
     student_wins = 0
     teacher_wins = 0
     student_experience_path = "student_experience.txt"
-    teacher_experience_path = "teacher_experience.txt"
+    teacher_experience_path = "old_student_experience.txt"
     student_dic = load_dict_from_file(student_experience_path)
     teacher_dic = load_dict_from_file(teacher_experience_path)
     for i in range(3):
