@@ -35,7 +35,7 @@ class LearningGame(object):
         while True:
             self.teacher.move(probability_random_move) if self.student_turn == 0 \
                 else self.student.move(probability_random_move)
-            if self.game.winner() == self.game.current_turn:
+            if self.game.winner() == self.game.last_turn:
                 break
             if len(self.game) == 9:  # field is filling
                 break

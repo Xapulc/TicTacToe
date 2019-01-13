@@ -6,7 +6,7 @@ from PyQt5.QtGui import QIcon
 from TicTacToe.ElemCourse import ElemCourse
 from TicTacToe.TicTacToe import TicTacToe
 from players.Computer import Computer
-from utils.file_worker import load_dict_from_file
+from utils.file_worker import load_dict_from_file, save_dict_to_file
 
 
 class MainWindow(QWidget):
@@ -30,7 +30,8 @@ class MainWindow(QWidget):
     def mode_game_but_clicked(self, mode):
         def helper():
             self.hide()
-            self.game_ui.game_window_prepare(mode)()
+            self.game_ui.pve_window_prepare() if mode == "pve" else self.game_ui.pvp_window_prepare()
+
         return helper
 
 
@@ -47,9 +48,12 @@ class GameWindow(QWidget):
         self.but_ico = "game/but_ico.svg"
         self.initUI()
         self.game = None
+        self.pvp_window_prepare = self.game_window_prepare("pvp")
+        self.pve_window_prepare = self.game_window_prepare("pve")
         self.comp_turn = None
         self.comp = None
         self.last_hint_num = None
+        self.experience_path = "old_student_experience.txt"
 
     def initUI(self):
         for but in self.radio_buts:
@@ -112,12 +116,13 @@ class GameWindow(QWidget):
         self.enabled_all(False)
         self.start_res_but.setText("Reset")
         self.start_res_but.show()
+        self.hint_but.hide()
         if self.comp_turn is None:
             self.start_res_but.clicked.disconnect(self.pvp_start)
-            self.start_res_but.clicked.connect(self.game_window_prepare("pvp"))
+            self.start_res_but.clicked.connect(self.pvp_window_prepare)
         else:
             self.start_res_but.clicked.disconnect(self.pve_start)
-            self.start_res_but.clicked.connect(self.game_window_prepare("pve"))
+            self.start_res_but.clicked.connect(self.pve_window_prepare)
 
         if self.game.winner() == -1:
             self.status_label.setText("Nobody wins")
@@ -126,6 +131,11 @@ class GameWindow(QWidget):
                 self.status_label.setText(f"{'Second' if self.game.current_turn else 'First'} player wins!")
             else:
                 self.status_label.setText(f"{'Computer' if self.comp_turn == self.game.winner() else 'Player'} wins!")
+
+        if self.comp_turn is not None:
+            data = load_dict_from_file(self.experience_path)
+            data[tuple(self.game)] = self.game.winner()
+            save_dict_to_file(data, self.experience_path)
 
     def enabled_all(self, flag):
         for but in self.buttons:
@@ -145,9 +155,12 @@ class GameWindow(QWidget):
             self.status_label.setText("")
 
             self.start_res_but.setText("Start")
-            # Never disconnect previous func
             try:
-                self.start_res_but.clicked.disconnect(self.game_window_prepare(mode))
+                self.start_res_but.clicked.disconnect(self.pvp_window_prepare)
+            except TypeError:
+                pass
+            try:
+                self.start_res_but.clicked.disconnect(self.pve_window_prepare)
             except TypeError:
                 pass
             self.start_res_but.clicked.connect(self.pve_start if mode == "pve" else self.pvp_start)

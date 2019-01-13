@@ -17,7 +17,7 @@ class PlayerGame(object):
         """
         self.game = TicTacToe()
         self.player = Player(self.game)
-        self.experience_path = "student_experience.txt"
+        self.experience_path = "old_student_experience.txt"
         self.comp = Computer(load_dict_from_file(self.experience_path), self.game)
         self.comp_turn = 0
 
