@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QFrame, QMessageBox, QLabel
+from PyQt5.QtWidgets import QWidget
 from PyQt5 import uic
-from PyQt5.QtCore import QCoreApplication
+from PyQt5.QtCore import QCoreApplication, QSize
 from PyQt5.QtGui import QIcon
 
 from TicTacToe.ElemCourse import ElemCourse
@@ -31,7 +31,6 @@ class MainWindow(QWidget):
         def helper():
             self.hide()
             self.game_ui.game_window_prepare(mode)()
-
         return helper
 
 
@@ -45,10 +44,12 @@ class GameWindow(QWidget):
                         self.but_4, self.but_5, self.but_6,
                         self.but_7, self.but_8, self.but_9]
         self.ico = "game/ttt.svg"
+        self.but_ico = "game/but_ico.svg"
         self.initUI()
         self.game = None
         self.comp_turn = None
         self.comp = None
+        self.last_hint_num = None
 
     def initUI(self):
         for but in self.radio_buts:
@@ -58,6 +59,14 @@ class GameWindow(QWidget):
         self.enabled_all(False)
         self.setWindowIcon(QIcon(self.ico))
         self.to_menu_but.clicked.connect(self.to_menu)
+        self.hint_but.clicked.connect(self.hint)
+        self.hint_but.setIcon(QIcon(self.but_ico))
+        self.hint_but.setIconSize(QSize(40, 40))
+
+    def hint(self):
+        el = self.comp.hint_move()
+        self.last_hint_num = 3 * el.x + el.y
+        self.buttons[self.last_hint_num].setText("!")
 
     def to_menu(self):
         self.hide()
@@ -84,6 +93,9 @@ class GameWindow(QWidget):
             except AssertionError:
                 pass
             else:
+                if self.last_hint_num is not None:
+                    self.buttons[self.last_hint_num].setText("")
+                    self.last_hint_num = None
                 self.buttons[key].setText("o" if self.game.current_turn else "x")
                 if self.game.check_end():
                     self.end_game()
@@ -98,14 +110,14 @@ class GameWindow(QWidget):
 
     def end_game(self):
         self.enabled_all(False)
-        self.start_but.setText("Reset")
-        self.start_but.show()
+        self.start_res_but.setText("Reset")
+        self.start_res_but.show()
         if self.comp_turn is None:
-            self.start_but.clicked.disconnect(self.pvp_start)
-            self.start_but.clicked.connect(self.game_window_prepare("pvp"))
+            self.start_res_but.clicked.disconnect(self.pvp_start)
+            self.start_res_but.clicked.connect(self.game_window_prepare("pvp"))
         else:
-            self.start_but.clicked.disconnect(self.pve_start)
-            self.start_but.clicked.connect(self.game_window_prepare("pve"))
+            self.start_res_but.clicked.disconnect(self.pve_start)
+            self.start_res_but.clicked.connect(self.game_window_prepare("pve"))
 
         if self.game.winner() == -1:
             self.status_label.setText("Nobody wins")
@@ -132,13 +144,14 @@ class GameWindow(QWidget):
             self.enabled_all(False)
             self.status_label.setText("")
 
-            self.start_but.setText("Start")
+            self.start_res_but.setText("Start")
             try:
-                self.start_but.clicked.disconnect(self.game_window_prepare(mode))
+                self.start_res_but.clicked.disconnect(self.game_window_prepare(mode))
             except TypeError:
                 pass
-            self.start_but.clicked.connect(self.pve_start if mode == "pve" else self.pvp_start)
-            self.start_but.show()
+            self.start_res_but.clicked.connect(self.pve_start if mode == "pve" else self.pvp_start)
+            self.start_res_but.show()
+            self.hint_but.hide()
 
             self.comp_turn = None
             self.show()
@@ -146,9 +159,11 @@ class GameWindow(QWidget):
         return helper
 
     def game_start(self):
-        self.start_but.hide()
+        self.start_res_but.hide()
+        self.hint_but.show()
         self.enabled_all(True)
         self.game = TicTacToe()
+        self.comp = Computer(load_dict_from_file("student_experience.txt"), self.game)
 
     def pvp_start(self):
         self.game_start()
@@ -156,7 +171,6 @@ class GameWindow(QWidget):
 
     def pve_start(self):
         self.game_start()
-        self.comp = Computer(load_dict_from_file("student_experience.txt"), self.game)
         self.comp_turn = 0 if self.radio_buts[0].isChecked() else 1
         for but in self.radio_buts:
             but.hide()
