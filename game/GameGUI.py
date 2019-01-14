@@ -77,7 +77,7 @@ class GameWindow(QWidget):
         self.comp_turn = None
         self.comp = None
         self.last_hint_num = None
-        self.experience_path = "old_student_experience.txt"
+        self.experience_path = "old_student_experience"
         self.cross_ico = QIcon("game/cross.svg")
         self.circle_ico = QIcon("game/circle.svg")
         self.hint_ico = QIcon("game/lamp.svg")
@@ -211,9 +211,9 @@ class GameWindow(QWidget):
         self.status_label.setText(self.statistic())
 
         if self.comp_turn is not None:
-            data = load_dict_from_file(self.experience_path)
+            data = load_dict_from_file(f"{self.experience_path}{n}.txt")
             data[tuple(self.game)] = self.game.winner()
-            save_dict_to_file(data, self.experience_path)
+            save_dict_to_file(data, f"{self.experience_path}{n}.txt")
 
     def enabled_all(self, flag):
         """
