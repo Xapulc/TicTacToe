@@ -21,11 +21,9 @@ def learn_teacher(count):
     for i in range(count):
         game, res = create_learning_teacher_game()
         lst[game[0].x*3 + game[0].y][tuple(game)] = res
-        # dic[tuple(game)] = res
         if count >= 100 and (i + 1) % (count // 100) == 0:
             print(f"complete on {100 * ((i + 1) / count):.0f}%")
     print(lst)
-    for i in range(9):
-        fw.save_dict_to_file(lst[i], f"{experience_path}{i}.txt")
+    fw.save_dicts_to_files(lst, experience_path)
 
 

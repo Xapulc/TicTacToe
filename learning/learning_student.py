@@ -1,4 +1,4 @@
-from utils.file_worker import save_dict_to_file, load_dict_from_file
+from utils.file_worker import save_dicts_to_files, load_dicts_from_files
 from TicTacToe.ElemCourse import ElemCourse
 from learning.LearningGame import LearningGame
 from TicTacToe.TicTacToe import TicTacToe
@@ -40,17 +40,19 @@ def learn_student(count, probability_random_move):
     """
     student_wins = 0
     teacher_wins = 0
-    student_experience_path = "student_experience.txt"
-    teacher_experience_path = "old_student_experience.txt"
-    student_dic = load_dict_from_file(student_experience_path)
-    teacher_dic = load_dict_from_file(teacher_experience_path)
+    student_experience_path = "student_experience"
+    teacher_experience_path = "teacher_experience"
+    student_dics = load_dicts_from_files(student_experience_path)
+    teacher_dics = load_dicts_from_files(teacher_experience_path)
+    print(teacher_dics)
+    print(student_dics)
     for i in range(3):
         for j in range(3):
             for k in range(3):
                 for l in range(3):
                     if not (l == j and k == i):
-                        filtered_teacher_dic = teacher_dic.copy()
-                        filtered_student_dic = student_dic.copy()
+                        filtered_teacher_dic = teacher_dics[i * 3 + j].copy()
+                        filtered_student_dic = student_dics[i * 3 + j].copy()
                         beginning_game = TicTacToe([ElemCourse(i, j), ElemCourse(k, l)])
                         filter_data(beginning_game, filtered_teacher_dic)
                         filter_data(beginning_game, filtered_student_dic)
@@ -61,10 +63,11 @@ def learn_student(count, probability_random_move):
                                                                                      beginning_game)
                             student_wins += (1 if is_student_win == 1 else 0)
                             teacher_wins += (1 if is_student_win == -1 else 0)
-                            student_dic[tuple(game)] = res
+                            student_dics[game[0].x * 3 + game[0].y][tuple(game)] = res
+                            # student_dics[tuple(game)] = res
                         print(f"complete on {100 * (27 * i + 9 * j + 3 * k + l) / 81:.0f}%")
 
     print(f"Student has {100 * (student_wins / (72 * count)):.2f}% wins")
     print(f"Teacher has {100 * (teacher_wins / (72 * count)):.2f}% wins")
-    save_dict_to_file(student_dic, student_experience_path)
-    print(len(student_dic.keys()))
+    save_dicts_to_files(student_dics, student_experience_path)
+    # print(len(student_dics.keys()))
