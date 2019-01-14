@@ -211,6 +211,7 @@ class GameWindow(QWidget):
         self.status_label.setText(self.statistic())
 
         if self.comp_turn is not None:
+            n = self.game[0].x*3 + self.game[0].y
             data = load_dict_from_file(f"{self.experience_path}{n}.txt")
             data[tuple(self.game)] = self.game.winner()
             save_dict_to_file(data, f"{self.experience_path}{n}.txt")
