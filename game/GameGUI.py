@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QWidget, QPushButton
 from PyQt5 import uic
 from PyQt5.QtCore import QCoreApplication, QSize
 from PyQt5.QtGui import QIcon
@@ -78,6 +78,10 @@ class GameWindow(QWidget):
         self.comp = None
         self.last_hint_num = None
         self.experience_path = "old_student_experience.txt"
+        self.cross_ico = QIcon("game/cross.svg")
+        self.circle_ico = QIcon("game/circle.svg")
+        self.exclamation_ico = QIcon("game/exclamation.svg")
+        self.none_ico = QIcon(None)
         self.initUI()
 
     def initUI(self):
@@ -101,7 +105,7 @@ class GameWindow(QWidget):
         """
         el = self.comp.hint_move()
         self.last_hint_num = 3 * el.x + el.y
-        self.buttons[self.last_hint_num].setText("!")
+        self.buttons[self.last_hint_num].setIcon(self.exclamation_ico)
 
     def to_menu(self):
         """
@@ -125,7 +129,7 @@ class GameWindow(QWidget):
         """
         self.comp.move()
         last_move = self.game[len(self.game) - 1]
-        self.buttons[3 * last_move.x + last_move.y].setText("o" if self.game.current_turn else "x")
+        self.buttons[3 * last_move.x + last_move.y].setIcon(self.circle_ico if self.game.current_turn else self.cross_ico)
         if self.game.check_end():
             self.end_game()
         else:
@@ -143,9 +147,9 @@ class GameWindow(QWidget):
                 pass
             else:
                 if self.last_hint_num is not None:
-                    self.buttons[self.last_hint_num].setText("")
+                    self.buttons[self.last_hint_num].setIcon(self.none_ico)
                     self.last_hint_num = None
-                self.buttons[key].setText("o" if self.game.current_turn else "x")
+                self.buttons[key].setIcon(self.circle_ico if self.game.current_turn else self.cross_ico)
                 if self.game.check_end():
                     self.end_game()
                 else:
@@ -227,7 +231,7 @@ class GameWindow(QWidget):
 
         def helper():
             for but in self.buttons:
-                but.setText("")
+                but.setIcon(self.none_ico)
                 but.show()
 
             for but in self.radio_buts:
@@ -254,6 +258,11 @@ class GameWindow(QWidget):
             self.show()
 
         return helper
+
+    def resizeEvent(self, QResizeEvent):
+        super().resizeEvent(QResizeEvent)
+        for but in self.buttons:
+            but.setIconSize(QSize(0.9*but.width(), 0.9*but.height()))
 
     def game_start(self):
         """
