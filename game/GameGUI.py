@@ -67,7 +67,7 @@ class GameWindow(QWidget):
                         self.but_4, self.but_5, self.but_6,
                         self.but_7, self.but_8, self.but_9]
         self.ico = "game/ttt.svg"
-        self.but_ico = "game/but_ico.svg"
+        self.hint_but_ico = "game/hint_but_ico.svg"
         self.game = None
         self.pvp_window_prepare = self.game_window_prepare("pvp")
         self.pve_window_prepare = self.game_window_prepare("pve")
@@ -80,7 +80,7 @@ class GameWindow(QWidget):
         self.experience_path = "old_student_experience.txt"
         self.cross_ico = QIcon("game/cross.svg")
         self.circle_ico = QIcon("game/circle.svg")
-        self.exclamation_ico = QIcon("game/exclamation.svg")
+        self.hint_ico = QIcon("game/lamp.svg")
         self.none_ico = QIcon(None)
         self.initUI()
 
@@ -96,7 +96,7 @@ class GameWindow(QWidget):
         self.setWindowIcon(QIcon(self.ico))
         self.to_menu_but.clicked.connect(self.to_menu)
         self.hint_but.clicked.connect(self.hint)
-        self.hint_but.setIcon(QIcon(self.but_ico))
+        self.hint_but.setIcon(QIcon(self.hint_but_ico))
         self.hint_but.setIconSize(QSize(40, 40))
 
     def hint(self):
@@ -105,7 +105,7 @@ class GameWindow(QWidget):
         """
         el = self.comp.hint_move()
         self.last_hint_num = 3 * el.x + el.y
-        self.buttons[self.last_hint_num].setIcon(self.exclamation_ico)
+        self.buttons[self.last_hint_num].setIcon(self.hint_ico)
 
     def to_menu(self):
         """
