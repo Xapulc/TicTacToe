@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QWidget, QPushButton
 from PyQt5 import uic
 from PyQt5.QtCore import QCoreApplication, QSize
 from PyQt5.QtGui import QIcon
@@ -67,7 +67,7 @@ class GameWindow(QWidget):
                         self.but_4, self.but_5, self.but_6,
                         self.but_7, self.but_8, self.but_9]
         self.ico = "game/ttt.svg"
-        self.but_ico = "game/but_ico.svg"
+        self.hint_but_ico = "game/hint_but_ico.svg"
         self.game = None
         self.pvp_window_prepare = self.game_window_prepare("pvp")
         self.pve_window_prepare = self.game_window_prepare("pve")
@@ -77,7 +77,11 @@ class GameWindow(QWidget):
         self.comp_turn = None
         self.comp = None
         self.last_hint_num = None
-        self.experience_path = "old_student_experience.txt"
+        self.experience_path = "old_student_experience"
+        self.cross_ico = QIcon("game/cross.svg")
+        self.circle_ico = QIcon("game/circle.svg")
+        self.hint_ico = QIcon("game/lamp.svg")
+        self.none_ico = QIcon(None)
         self.initUI()
 
     def initUI(self):
@@ -92,7 +96,7 @@ class GameWindow(QWidget):
         self.setWindowIcon(QIcon(self.ico))
         self.to_menu_but.clicked.connect(self.to_menu)
         self.hint_but.clicked.connect(self.hint)
-        self.hint_but.setIcon(QIcon(self.but_ico))
+        self.hint_but.setIcon(QIcon(self.hint_but_ico))
         self.hint_but.setIconSize(QSize(40, 40))
 
     def hint(self):
@@ -101,7 +105,7 @@ class GameWindow(QWidget):
         """
         el = self.comp.hint_move()
         self.last_hint_num = 3 * el.x + el.y
-        self.buttons[self.last_hint_num].setText("!")
+        self.buttons[self.last_hint_num].setIcon(self.hint_ico)
 
     def to_menu(self):
         """
@@ -125,7 +129,7 @@ class GameWindow(QWidget):
         """
         self.comp.move()
         last_move = self.game[len(self.game) - 1]
-        self.buttons[3 * last_move.x + last_move.y].setText("o" if self.game.current_turn else "x")
+        self.buttons[3 * last_move.x + last_move.y].setIcon(self.circle_ico if self.game.current_turn else self.cross_ico)
         if self.game.check_end():
             self.end_game()
         else:
@@ -143,9 +147,9 @@ class GameWindow(QWidget):
                 pass
             else:
                 if self.last_hint_num is not None:
-                    self.buttons[self.last_hint_num].setText("")
+                    self.buttons[self.last_hint_num].setIcon(self.none_ico)
                     self.last_hint_num = None
-                self.buttons[key].setText("o" if self.game.current_turn else "x")
+                self.buttons[key].setIcon(self.circle_ico if self.game.current_turn else self.cross_ico)
                 if self.game.check_end():
                     self.end_game()
                 else:
@@ -207,9 +211,10 @@ class GameWindow(QWidget):
         self.status_label.setText(self.statistic())
 
         if self.comp_turn is not None:
-            data = load_dict_from_file(self.experience_path)
+            n = self.game[0].x*3 + self.game[0].y
+            data = load_dict_from_file(f"{self.experience_path}{n}.txt")
             data[tuple(self.game)] = self.game.winner()
-            save_dict_to_file(data, self.experience_path)
+            save_dict_to_file(data, f"{self.experience_path}{n}.txt")
 
     def enabled_all(self, flag):
         """
@@ -227,7 +232,7 @@ class GameWindow(QWidget):
 
         def helper():
             for but in self.buttons:
-                but.setText("")
+                but.setIcon(self.none_ico)
                 but.show()
 
             for but in self.radio_buts:
@@ -254,6 +259,11 @@ class GameWindow(QWidget):
             self.show()
 
         return helper
+
+    def resizeEvent(self, QResizeEvent):
+        super().resizeEvent(QResizeEvent)
+        for but in self.buttons:
+            but.setIconSize(QSize(0.9*but.width(), 0.9*but.height()))
 
     def game_start(self):
         """

@@ -1,6 +1,7 @@
 import random as rnd
 from TicTacToe.ElemCourse import ElemCourse
 from TicTacToe.TicTacToe import TicTacToe
+from utils.file_worker import load_dict_from_file
 
 
 class Computer(object):
@@ -80,6 +81,12 @@ class Computer(object):
         """
         Make a computer move
         """
+        if len(self.game) == 0:
+            self.game.add(self.generate_random_elem())
+            return
+        elif isinstance(self.data, str):
+            n = self.game[0].x*3 + self.game[0].y
+            self.data = load_dict_from_file(f"{self.data}{n}.txt")
         self.__filter()
         random_move = rnd.random()
         if self.data and random_move >= probability_random:
@@ -91,6 +98,11 @@ class Computer(object):
         """
         :return: ElemCourse class instance, more effective move in current game
         """
+        if len(self.game) == 0:
+            return self.generate_random_elem()
+        elif isinstance(self.data, str):
+            n = self.game[0].x*3 + self.game[0].y
+            self.data = load_dict_from_file(f"{self.data}{n}.txt")
         self.__filter()
         return self.__learning_move()
 

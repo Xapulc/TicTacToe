@@ -24,3 +24,15 @@ def load_dict_from_file(file_name):
     except FileNotFoundError:
         return {}
 
+
+def save_dicts_to_files(lst, file_name):
+    for i in range(9):
+        save_dict_to_file(lst[i], f"{file_name}{i}.txt")
+
+
+def load_dicts_from_files(file_name):
+    lst = []
+    for i in range(9):
+        lst.append(load_dict_from_file(f"{file_name}{i}.txt"))
+    return lst
+

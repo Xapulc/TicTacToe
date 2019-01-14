@@ -17,7 +17,7 @@ class PlayerGame(object):
         """
         self.game = TicTacToe()
         self.player = Player(self.game)
-        self.experience_path = "old_student_experience.txt"
+        self.experience_path = "old_student_experience"
         self.comp = Computer(load_dict_from_file(self.experience_path), self.game)
         self.comp_turn = 0
 
@@ -56,9 +56,10 @@ class PlayerGame(object):
                     print("Congratulations!!!")
                     break
 
-            data = load_dict_from_file(self.experience_path)
+            n = self.game[0].x*3*self.game[0].y
+            data = load_dict_from_file(f"{self.experience_path}{n}.txt")
             data[tuple(self.game)] = self.game.winner()
-            save_dict_to_file(data, self.experience_path)
+            save_dict_to_file(data, f"{self.experience_path}{n}.txt")
 
             agreement = input("Do you want to play new game: 1 - yes, other - no")
             if agreement == '1':

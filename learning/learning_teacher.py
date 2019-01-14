@@ -16,12 +16,14 @@ def learn_teacher(count):
     This script is used for learning teacher
     """
     dic = {}
-    experience_path = "teacher_experience.txt"
+    lst = [{} for _ in range(9)]
+    experience_path = "teacher_experience"
     for i in range(count):
         game, res = create_learning_teacher_game()
-        dic[tuple(game)] = res
+        lst[game[0].x*3 + game[0].y][tuple(game)] = res
         if count >= 100 and (i + 1) % (count // 100) == 0:
             print(f"complete on {100 * ((i + 1) / count):.0f}%")
-    print(len(dic.keys()))
-    fw.save_dict_to_file(dic, experience_path)
+    print(lst)
+    fw.save_dicts_to_files(lst, experience_path)
+
 
