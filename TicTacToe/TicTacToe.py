@@ -1,3 +1,7 @@
+from collections import deque
+from threading import Thread
+from time import time
+
 from TicTacToe.ElemCourse import ElemCourse
 
 
@@ -74,33 +78,48 @@ class TicTacToe(list):
         Recursively find the best move
         :return: move and res, -1 -> lose; 0 -> draw; 1 -> win
         """
+        def helper(game, next_move, results):
+            game.add(next_move)
+
+            if game.check_end():
+                if game.winner() == -1:
+                    results.append((next_move, draw))
+                elif game.winner() == self.current_turn:
+                    results.append((next_move, win))
+                else:
+                    results.append((next_move, lose))
+            else:
+                move, res = game.best_move()
+                results.append((next_move, -res))
+
         win = 1
         draw = 0
         lose = -1
+        max_deep = 1
         best_move = None
         best_res = lose-1
+        results = deque()
+        count = len(self.negative())
 
+        threads = {}
+        # start = time()
         for elem in self.negative():
-            prob_game = TicTacToe(self.copy())
-            prob_game.add(elem)
+            if len(self) < max_deep:
+                threads[elem] = Thread(target=helper, args=[TicTacToe(self.copy()), elem, results])
+                threads[elem].start()
+            else:
+                helper(TicTacToe(self.copy()), elem, results)
 
-            if prob_game.check_end():
-                if prob_game.winner() == -1:
-                    if draw > best_res:
-                        best_move, best_res = elem, draw
-                    continue
-                elif prob_game.winner() == self.current_turn:
-                    return elem, win
-                else:
-                    if lose > best_res:
-                        best_move, best_res = elem, lose
-                    continue
+        while count > 0:
+            if len(results) > 0:
+                count -= 1
+                (move, res) = results.popleft()
+                if res > best_res:
+                    best_move, best_res = move, res
 
-            move, res = prob_game.best_move()
-            if -res > best_res:
-                best_move, best_res = elem, -res
-                if best_res == win:
-                    return best_move, win
+        # end = time()
+        # if len(self) < 3:
+        #     print(f"time on lvl {len(self)} = {end-start}")
 
         return best_move, best_res
 
