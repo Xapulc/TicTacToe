@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QPushButton
+from PyQt5.QtWidgets import QWidget
 from PyQt5 import uic
 from PyQt5.QtCore import QCoreApplication, QSize
 from PyQt5.QtGui import QIcon
@@ -6,7 +6,6 @@ from PyQt5.QtGui import QIcon
 from TicTacToe.ElemCourse import ElemCourse
 from TicTacToe.TicTacToe import TicTacToe
 from players.Computer import Computer
-from utils.file_worker import load_dict_from_file, save_dict_to_file
 
 
 class MainWindow(QWidget):
@@ -67,7 +66,7 @@ class GameWindow(QWidget):
                         self.but_4, self.but_5, self.but_6,
                         self.but_7, self.but_8, self.but_9]
         self.ico = "game/ttt.svg"
-        self.hint_but_ico = "game/hint_but_ico.svg"
+        self.but_ico = "game/but_ico.svg"
         self.game = None
         self.pvp_window_prepare = self.game_window_prepare("pvp")
         self.pve_window_prepare = self.game_window_prepare("pve")
@@ -77,11 +76,6 @@ class GameWindow(QWidget):
         self.comp_turn = None
         self.comp = None
         self.last_hint_num = None
-        self.experience_path = "old_student_experience"
-        self.cross_ico = QIcon("game/cross.svg")
-        self.circle_ico = QIcon("game/circle.svg")
-        self.hint_ico = QIcon("game/lamp.svg")
-        self.none_ico = QIcon(None)
         self.initUI()
 
     def initUI(self):
@@ -96,7 +90,7 @@ class GameWindow(QWidget):
         self.setWindowIcon(QIcon(self.ico))
         self.to_menu_but.clicked.connect(self.to_menu)
         self.hint_but.clicked.connect(self.hint)
-        self.hint_but.setIcon(QIcon(self.hint_but_ico))
+        self.hint_but.setIcon(QIcon(self.but_ico))
         self.hint_but.setIconSize(QSize(40, 40))
 
     def hint(self):
@@ -105,7 +99,7 @@ class GameWindow(QWidget):
         """
         el = self.comp.hint_move()
         self.last_hint_num = 3 * el.x + el.y
-        self.buttons[self.last_hint_num].setIcon(self.hint_ico)
+        self.buttons[self.last_hint_num].setText("!")
 
     def to_menu(self):
         """
@@ -129,7 +123,7 @@ class GameWindow(QWidget):
         """
         self.comp.move()
         last_move = self.game[len(self.game) - 1]
-        self.buttons[3 * last_move.x + last_move.y].setIcon(self.circle_ico if self.game.current_turn else self.cross_ico)
+        self.buttons[3 * last_move.x + last_move.y].setText("o" if self.game.current_turn else "x")
         if self.game.check_end():
             self.end_game()
         else:
@@ -147,9 +141,9 @@ class GameWindow(QWidget):
                 pass
             else:
                 if self.last_hint_num is not None:
-                    self.buttons[self.last_hint_num].setIcon(self.none_ico)
+                    self.buttons[self.last_hint_num].setText("")
                     self.last_hint_num = None
-                self.buttons[key].setIcon(self.circle_ico if self.game.current_turn else self.cross_ico)
+                self.buttons[key].setText("o" if self.game.current_turn else "x")
                 if self.game.check_end():
                     self.end_game()
                 else:
@@ -210,12 +204,6 @@ class GameWindow(QWidget):
 
         self.status_label.setText(self.statistic())
 
-        if self.comp_turn is not None:
-            n = self.game[0].x*3 + self.game[0].y
-            data = load_dict_from_file(f"{self.experience_path}{n}.txt")
-            data[tuple(self.game)] = self.game.winner()
-            save_dict_to_file(data, f"{self.experience_path}{n}.txt")
-
     def enabled_all(self, flag):
         """
         makes all buttons responsible for the game [un]available for pressing
@@ -232,7 +220,7 @@ class GameWindow(QWidget):
 
         def helper():
             for but in self.buttons:
-                but.setIcon(self.none_ico)
+                but.setText("")
                 but.show()
 
             for but in self.radio_buts:
@@ -260,11 +248,6 @@ class GameWindow(QWidget):
 
         return helper
 
-    def resizeEvent(self, QResizeEvent):
-        super().resizeEvent(QResizeEvent)
-        for but in self.buttons:
-            but.setIconSize(QSize(0.9*but.width(), 0.9*but.height()))
-
     def game_start(self):
         """
         help function, same actions for pve and pvp
@@ -273,7 +256,7 @@ class GameWindow(QWidget):
         self.hint_but.show()
         self.enabled_all(True)
         self.game = TicTacToe()
-        self.comp = Computer(load_dict_from_file("student_experience.txt"), self.game)
+        self.comp = Computer(self.game)
 
     def pvp_start(self):
         """

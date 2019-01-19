@@ -1,7 +1,6 @@
 from players.Computer import Computer
 from players.Player import Player
 from TicTacToe.TicTacToe import TicTacToe
-from utils.file_worker import load_dict_from_file, save_dict_to_file
 
 
 class PlayerGame(object):
@@ -17,8 +16,7 @@ class PlayerGame(object):
         """
         self.game = TicTacToe()
         self.player = Player(self.game)
-        self.experience_path = "old_student_experience"
-        self.comp = Computer(load_dict_from_file(self.experience_path), self.game)
+        self.comp = Computer(self.game)
         self.comp_turn = 0
 
     def start(self):
@@ -55,11 +53,6 @@ class PlayerGame(object):
                     print("You lose") if self.comp_turn == 0 else print("You win!!!")
                     print("Congratulations!!!")
                     break
-
-            n = self.game[0].x*3*self.game[0].y
-            data = load_dict_from_file(f"{self.experience_path}{n}.txt")
-            data[tuple(self.game)] = self.game.winner()
-            save_dict_to_file(data, f"{self.experience_path}{n}.txt")
 
             agreement = input("Do you want to play new game: 1 - yes, other - no")
             if agreement == '1':

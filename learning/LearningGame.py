@@ -23,8 +23,8 @@ class LearningGame(object):
             self.game = start
         else:
             self.game = TicTacToe()
-        self.teacher = Computer(teacher_dic, self.game)
-        self.student = Computer(student_dic, self.game)
+        self.teacher = Computer(self.game, teacher_dic)
+        self.student = Computer(self.game, student_dic)
         self.student_turn = 1 if random() > 0.5 else 0  # if 1, student moves first, else teacher moves first
 
     def start(self, probability_random_move):

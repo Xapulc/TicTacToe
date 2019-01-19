@@ -1,7 +1,6 @@
 import random as rnd
 from TicTacToe.ElemCourse import ElemCourse
 from TicTacToe.TicTacToe import TicTacToe
-from utils.file_worker import load_dict_from_file
 
 
 class Computer(object):
@@ -9,16 +8,20 @@ class Computer(object):
     This class is designed to simulate the behavior of a computer in a game.
     """
 
-    def __init__(self, data, game):
+    def __init__(self, game, data=None):
         """
-        :param data: data of game, the basis of computer behavior
         :param game: TicTacToe class instance
+        :param data: data of game, the basis of computer behavior
         """
-        self.data = data
         self.game = game
-        self.win_cost = 1
-        self.draw_cost = 0
-        self.lose_cost = -1
+        if data:
+            self.data = data
+            self.move = self.l_move
+            self.win_cost = 1
+            self.draw_cost = 0
+            self.lose_cost = -1
+        else:
+            self.move = self.best_move
 
     def __build_count_matrix(self):
         """
@@ -77,16 +80,10 @@ class Computer(object):
                     max_val = chance_matrix[i][j]
         return ElemCourse(i_max, j_max)
 
-    def move(self, probability_random=0):
+    def l_move(self, probability_random=0):
         """
-        Make a computer move
+        Make a computer learning move
         """
-        if len(self.game) == 0:
-            self.game.add(self.generate_random_elem())
-            return
-        elif isinstance(self.data, str):
-            n = self.game[0].x*3 + self.game[0].y
-            self.data = load_dict_from_file(f"{self.data}{n}.txt")
         self.__filter()
         random_move = rnd.random()
         if self.data and random_move >= probability_random:
@@ -94,17 +91,17 @@ class Computer(object):
         else:
             self.game.add(self.generate_random_elem())
 
+    def best_move(self):
+        """
+        Do best move
+        """
+        self.game.add(self.game.best_move()[0])
+
     def hint_move(self):
         """
         :return: ElemCourse class instance, more effective move in current game
         """
-        if len(self.game) == 0:
-            return self.generate_random_elem()
-        elif isinstance(self.data, str):
-            n = self.game[0].x*3 + self.game[0].y
-            self.data = load_dict_from_file(f"{self.data}{n}.txt")
-        self.__filter()
-        return self.__learning_move()
+        return self.game.best_move()
 
     def prepare_next_move(self):
         """

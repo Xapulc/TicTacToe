@@ -69,6 +69,41 @@ class TicTacToe(list):
         self.add(move)
         return self.__check_end_with_move(move, self.last_turn)
 
+    def best_move(self):
+        """
+        Recursively find the best move
+        :return: move and res, -1 -> lose; 0 -> draw; 1 -> win
+        """
+        win = 1
+        draw = 0
+        lose = -1
+        best_move = None
+        best_res = lose-1
+
+        for elem in self.negative():
+            prob_game = TicTacToe(self.copy())
+            prob_game.add(elem)
+
+            if prob_game.check_end():
+                if prob_game.winner() == -1:
+                    if draw > best_res:
+                        best_move, best_res = elem, draw
+                    continue
+                elif prob_game.winner() == self.current_turn:
+                    return elem, win
+                else:
+                    if lose > best_res:
+                        best_move, best_res = elem, lose
+                    continue
+
+            move, res = prob_game.best_move()
+            if -res > best_res:
+                best_move, best_res = elem, -res
+                if best_res == win:
+                    return best_move, win
+
+        return best_move, best_res
+
     @property
     def current_turn(self):
         """
