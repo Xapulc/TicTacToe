@@ -95,18 +95,16 @@ class TicTacToe(list):
         win = 1
         draw = 0
         lose = -1
-        max_deep = 1
+        max_deep = 0
         best_move = None
         best_res = lose-1
         results = deque()
         count = len(self.negative())
 
-        threads = {}
         # start = time()
         for elem in self.negative():
             if len(self) < max_deep:
-                threads[elem] = Thread(target=helper, args=[TicTacToe(self.copy()), elem, results])
-                threads[elem].start()
+                Thread(target=helper, args=(TicTacToe(self.copy()), elem, results), daemon=True).start()
             else:
                 helper(TicTacToe(self.copy()), elem, results)
 
@@ -118,7 +116,7 @@ class TicTacToe(list):
                     best_move, best_res = move, res
 
         # end = time()
-        # if len(self) < 3:
+        # if len(self) < 4:
         #     print(f"time on lvl {len(self)} = {end-start}")
 
         return best_move, best_res
